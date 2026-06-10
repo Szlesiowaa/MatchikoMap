@@ -1,0 +1,1897 @@
+[
+  {
+    "name": "powiat ropczycko-sędziszowski",
+    "lat": 50.04878444970013,
+    "lng": 21.643749107983147
+  },
+  {
+    "name": "powiat łosicki",
+    "lat": 52.22469982723207,
+    "lng": 22.839748212558654
+  },
+  {
+    "name": "powiat piaseczyński",
+    "lat": 52.01207868917081,
+    "lng": 21.01941172533786
+  },
+  {
+    "name": "powiat radomski",
+    "lat": 51.37418956626696,
+    "lng": 21.193546670754408
+  },
+  {
+    "name": "powiat sierpecki",
+    "lat": 52.82871574688173,
+    "lng": 19.695416913037096
+  },
+  {
+    "name": "powiat szydłowiecki",
+    "lat": 51.24513181378889,
+    "lng": 20.873417666067304
+  },
+  {
+    "name": "powiat węgrowski",
+    "lat": 52.46161271380657,
+    "lng": 21.89053727587542
+  },
+  {
+    "name": "powiat gostyniński",
+    "lat": 52.37796767681523,
+    "lng": 19.57121055191763
+  },
+  {
+    "name": "powiat grodziski",
+    "lat": 52.08349210535585,
+    "lng": 20.591445363019428
+  },
+  {
+    "name": "powiat łukowski",
+    "lat": 51.875056988610545,
+    "lng": 22.23632834707172
+  },
+  {
+    "name": "powiat tomaszowski",
+    "lat": 50.47331293973123,
+    "lng": 23.55320468081966
+  },
+  {
+    "name": "powiat Chełm",
+    "lat": 51.134178294947745,
+    "lng": 23.483744518717238
+  },
+  {
+    "name": "powiat brzeski",
+    "lat": 49.98543343943405,
+    "lng": 20.650092481569583
+  },
+  {
+    "name": "powiat Kraków",
+    "lat": 50.05312124439709,
+    "lng": 19.98513330277308
+  },
+  {
+    "name": "powiat zgierski",
+    "lat": 51.924085233595214,
+    "lng": 19.42725409864228
+  },
+  {
+    "name": "powiat sulęciński",
+    "lat": 52.44413775410105,
+    "lng": 15.07416381849582
+  },
+  {
+    "name": "powiat łańcucki",
+    "lat": 50.0926977857285,
+    "lng": 22.255696470742055
+  },
+  {
+    "name": "powiat brzeski",
+    "lat": 50.792002927802145,
+    "lng": 17.47788901110647
+  },
+  {
+    "name": "powiat ostrzeszowski",
+    "lat": 51.45055640006342,
+    "lng": 18.025335372751584
+  },
+  {
+    "name": "powiat Radom",
+    "lat": 51.40562516864424,
+    "lng": 21.15376681939513
+  },
+  {
+    "name": "powiat żyrardowski",
+    "lat": 52.00187400008005,
+    "lng": 20.42956018710867
+  },
+  {
+    "name": "powiat obornicki",
+    "lat": 52.71030072417881,
+    "lng": 16.843237214365328
+  },
+  {
+    "name": "powiat leszczyński",
+    "lat": 51.87139719893988,
+    "lng": 16.570276927217506
+  },
+  {
+    "name": "powiat Siedlce",
+    "lat": 52.16399824336348,
+    "lng": 22.27078305418342
+  },
+  {
+    "name": "powiat Leszno",
+    "lat": 51.846740577693474,
+    "lng": 16.578097129382975
+  },
+  {
+    "name": "powiat kolski",
+    "lat": 52.238042631161974,
+    "lng": 18.76760261916597
+  },
+  {
+    "name": "powiat Łomża",
+    "lat": 53.174116123889526,
+    "lng": 22.059100191338835
+  },
+  {
+    "name": "powiat rawicki",
+    "lat": 51.645404707802854,
+    "lng": 16.956101667527033
+  },
+  {
+    "name": "powiat słupecki",
+    "lat": 52.30920218212217,
+    "lng": 17.91790202294537
+  },
+  {
+    "name": "powiat kościerski",
+    "lat": 54.048260738959776,
+    "lng": 18.002687917337585
+  },
+  {
+    "name": "powiat włoszczowski",
+    "lat": 50.828515450488354,
+    "lng": 19.965211637627036
+  },
+  {
+    "name": "powiat stargardzki",
+    "lat": 53.35161694555598,
+    "lng": 15.217797799824233
+  },
+  {
+    "name": "powiat Wrocław",
+    "lat": 51.12819247596528,
+    "lng": 16.996386663320557
+  },
+  {
+    "name": "powiat giżycki",
+    "lat": 53.998512423203316,
+    "lng": 21.843870353470173
+  },
+  {
+    "name": "powiat mrągowski",
+    "lat": 53.81436500737817,
+    "lng": 21.36522669443116
+  },
+  {
+    "name": "powiat głogowski",
+    "lat": 51.677134761289985,
+    "lng": 16.0767601155854
+  },
+  {
+    "name": "powiat choszczeński",
+    "lat": 53.13836008769684,
+    "lng": 15.581573929597415
+  },
+  {
+    "name": "powiat Sosnowiec",
+    "lat": 50.276914996198094,
+    "lng": 19.195285401007286
+  },
+  {
+    "name": "powiat rybnicki",
+    "lat": 50.11555863715442,
+    "lng": 18.55115032274059
+  },
+  {
+    "name": "powiat Gliwice",
+    "lat": 50.299386944417165,
+    "lng": 18.65452630828198
+  },
+  {
+    "name": "powiat Piekary Śląskie",
+    "lat": 50.372591508820435,
+    "lng": 18.966729747737432
+  },
+  {
+    "name": "powiat Jaworzno",
+    "lat": 50.20417041651694,
+    "lng": 19.29108814239076
+  },
+  {
+    "name": "powiat inowrocławski",
+    "lat": 52.79475903105702,
+    "lng": 18.299692764671175
+  },
+  {
+    "name": "powiat brodnicki",
+    "lat": 53.26160413411191,
+    "lng": 19.426892770020604
+  },
+  {
+    "name": "powiat włocławski",
+    "lat": 52.52549857779907,
+    "lng": 19.02958578168067
+  },
+  {
+    "name": "powiat mogileński",
+    "lat": 52.63843475877101,
+    "lng": 18.071647204932457
+  },
+  {
+    "name": "powiat tucholski",
+    "lat": 53.58470877164176,
+    "lng": 17.95537613531317
+  },
+  {
+    "name": "powiat raciborski",
+    "lat": 50.115236701433226,
+    "lng": 18.245980082344897
+  },
+  {
+    "name": "powiat cieszyński",
+    "lat": 49.74041360106767,
+    "lng": 18.80201469567365
+  },
+  {
+    "name": "powiat krośnieński",
+    "lat": 49.58043076504621,
+    "lng": 21.763839640038643
+  },
+  {
+    "name": "powiat nyski",
+    "lat": 50.477418766412704,
+    "lng": 17.34795630115982
+  },
+  {
+    "name": "powiat Jelenia Góra",
+    "lat": 50.86920908694345,
+    "lng": 15.706982953093503
+  },
+  {
+    "name": "powiat zgorzelecki",
+    "lat": 51.194310867657194,
+    "lng": 15.090798973221125
+  },
+  {
+    "name": "powiat przasnyski",
+    "lat": 53.13876318428483,
+    "lng": 20.913930199994194
+  },
+  {
+    "name": "powiat Ostrołęka",
+    "lat": 53.08161246786551,
+    "lng": 21.592496318769648
+  },
+  {
+    "name": "powiat średzki",
+    "lat": 52.175451500459204,
+    "lng": 17.319036750976963
+  },
+  {
+    "name": "powiat jarociński",
+    "lat": 51.99213497681193,
+    "lng": 17.514012570421688
+  },
+  {
+    "name": "powiat Gdynia",
+    "lat": 54.506699737377225,
+    "lng": 18.480921467073895
+  },
+  {
+    "name": "powiat Świnoujście",
+    "lat": 53.84899308443708,
+    "lng": 14.32601532261743
+  },
+  {
+    "name": "powiat kamiennogórski",
+    "lat": 50.753198034875965,
+    "lng": 15.999628214170173
+  },
+  {
+    "name": "powiat pabianicki",
+    "lat": 51.67334627037291,
+    "lng": 19.279999162780186
+  },
+  {
+    "name": "powiat kolneński",
+    "lat": 53.40166845105142,
+    "lng": 21.973580420243934
+  },
+  {
+    "name": "powiat Opole",
+    "lat": 50.68088874938397,
+    "lng": 17.91347963173162
+  },
+  {
+    "name": "powiat ostródzki",
+    "lat": 53.74675853566449,
+    "lng": 19.958674961298676
+  },
+  {
+    "name": "powiat przemyski",
+    "lat": 49.76778323557911,
+    "lng": 22.6292155925427
+  },
+  {
+    "name": "powiat Przemyśl",
+    "lat": 49.78054748064355,
+    "lng": 22.777860211926868
+  },
+  {
+    "name": "powiat warszawski zachodni",
+    "lat": 52.26426253173814,
+    "lng": 20.659952548657607
+  },
+  {
+    "name": "powiat włodawski",
+    "lat": 51.49764836616305,
+    "lng": 23.407182752362328
+  },
+  {
+    "name": "powiat Lublin",
+    "lat": 51.22416437842459,
+    "lng": 22.551860394593344
+  },
+  {
+    "name": "powiat bocheński",
+    "lat": 49.948388532353995,
+    "lng": 20.43522186492217
+  },
+  {
+    "name": "powiat Tarnów",
+    "lat": 50.02386808793193,
+    "lng": 20.97240418305492
+  },
+  {
+    "name": "powiat wschowski",
+    "lat": 51.8304941421486,
+    "lng": 16.156368082836202
+  },
+  {
+    "name": "powiat gorzowski",
+    "lat": 52.73259316963461,
+    "lng": 15.118039029658519
+  },
+  {
+    "name": "powiat międzyrzecki",
+    "lat": 52.51004197107619,
+    "lng": 15.605932261599573
+  },
+  {
+    "name": "powiat słubicki",
+    "lat": 52.355921247808816,
+    "lng": 14.767076414376238
+  },
+  {
+    "name": "powiat nowotomyski",
+    "lat": 52.353507683655565,
+    "lng": 16.140442933033736
+  },
+  {
+    "name": "powiat wągrowiecki",
+    "lat": 52.81214943519786,
+    "lng": 17.270632435232525
+  },
+  {
+    "name": "powiat bielski",
+    "lat": 52.74753249368935,
+    "lng": 23.056311567204418
+  },
+  {
+    "name": "powiat suwalski",
+    "lat": 54.17182429138617,
+    "lng": 22.850498030839194
+  },
+  {
+    "name": "powiat słupski",
+    "lat": 54.46801690704427,
+    "lng": 17.166732201247743
+  },
+  {
+    "name": "powiat ostrowiecki",
+    "lat": 50.942588780070295,
+    "lng": 21.40397758574191
+  },
+  {
+    "name": "powiat skarżyski",
+    "lat": 51.07958207193249,
+    "lng": 20.800100833962567
+  },
+  {
+    "name": "powiat kartuski",
+    "lat": 54.313232426813684,
+    "lng": 18.077037696982647
+  },
+  {
+    "name": "powiat częstochowski",
+    "lat": 50.80758576601028,
+    "lng": 19.35748066095733
+  },
+  {
+    "name": "powiat pyrzycki",
+    "lat": 53.1339827453029,
+    "lng": 14.935943259713246
+  },
+  {
+    "name": "powiat Siemianowice Śląskie",
+    "lat": 50.312888110869466,
+    "lng": 19.02489118259126
+  },
+  {
+    "name": "powiat Elbląg",
+    "lat": 54.188863770187844,
+    "lng": 19.43906112028323
+  },
+  {
+    "name": "powiat gryfiński",
+    "lat": 53.02156965900066,
+    "lng": 14.499294414472576
+  },
+  {
+    "name": "powiat Bytom",
+    "lat": 50.36322171512499,
+    "lng": 18.874129878755944
+  },
+  {
+    "name": "powiat złotoryjski",
+    "lat": 51.103852578472306,
+    "lng": 15.879303192841396
+  },
+  {
+    "name": "powiat wrocławski",
+    "lat": 51.020778694387396,
+    "lng": 16.97386036153944
+  },
+  {
+    "name": "powiat milicki",
+    "lat": 51.51699852078895,
+    "lng": 17.316741058172116
+  },
+  {
+    "name": "powiat lubiński",
+    "lat": 51.42215697874629,
+    "lng": 16.283547544759873
+  },
+  {
+    "name": "powiat lipnowski",
+    "lat": 52.81415349366324,
+    "lng": 19.23615856552215
+  },
+  {
+    "name": "powiat żniński",
+    "lat": 52.8234295279483,
+    "lng": 17.752732842280736
+  },
+  {
+    "name": "powiat radziejowski",
+    "lat": 52.586597640362314,
+    "lng": 18.60840166563395
+  },
+  {
+    "name": "powiat nakielski",
+    "lat": 53.087214885469805,
+    "lng": 17.579409141230517
+  },
+  {
+    "name": "powiat bartoszycki",
+    "lat": 54.247543282472876,
+    "lng": 20.75804733691207
+  },
+  {
+    "name": "powiat żywiecki",
+    "lat": 49.607948439545204,
+    "lng": 19.19310826308757
+  },
+  {
+    "name": "powiat sokólski",
+    "lat": 53.46278295394201,
+    "lng": 23.428152980562523
+  },
+  {
+    "name": "powiat jasielski",
+    "lat": 49.65025675242869,
+    "lng": 21.466183165884633
+  },
+  {
+    "name": "powiat głubczycki",
+    "lat": 50.13564216404838,
+    "lng": 17.860101892321378
+  },
+  {
+    "name": "powiat nowosądecki",
+    "lat": 49.554603771647834,
+    "lng": 20.769069531473594
+  },
+  {
+    "name": "powiat Zielona Góra",
+    "lat": 51.926133059409345,
+    "lng": 15.530650219532058
+  },
+  {
+    "name": "powiat Skierniewice",
+    "lat": 51.957293743815924,
+    "lng": 20.151506750909693
+  },
+  {
+    "name": "powiat żagański",
+    "lat": 51.587185240552756,
+    "lng": 15.420807455051323
+  },
+  {
+    "name": "powiat Gdańsk",
+    "lat": 54.35908288251696,
+    "lng": 18.637155018836296
+  },
+  {
+    "name": "powiat lęborski",
+    "lat": 54.581154106936324,
+    "lng": 17.6880877822824
+  },
+  {
+    "name": "powiat Łódź",
+    "lat": 51.7675852900689,
+    "lng": 19.482611786157126
+  },
+  {
+    "name": "powiat piotrkowski",
+    "lat": 51.3551421347854,
+    "lng": 19.733247968071925
+  },
+  {
+    "name": "powiat ostrowski",
+    "lat": 52.783138893247774,
+    "lng": 22.00969322008886
+  },
+  {
+    "name": "powiat starogardzki",
+    "lat": 53.87888182818239,
+    "lng": 18.412197041935464
+  },
+  {
+    "name": "powiat Poznań",
+    "lat": 52.4063093209776,
+    "lng": 16.9260037085194
+  },
+  {
+    "name": "powiat Konin",
+    "lat": 52.25723350929053,
+    "lng": 18.262074481539997
+  },
+  {
+    "name": "powiat stalowowolski",
+    "lat": 50.620127405315,
+    "lng": 22.031814458662396
+  },
+  {
+    "name": "powiat Tarnobrzeg",
+    "lat": 50.58523024182687,
+    "lng": 21.707594907285646
+  },
+  {
+    "name": "powiat płoński",
+    "lat": 52.627263047062755,
+    "lng": 20.353500749251605
+  },
+  {
+    "name": "powiat mławski",
+    "lat": 53.051181040803975,
+    "lng": 20.361437058940655
+  },
+  {
+    "name": "powiat siedlecki",
+    "lat": 52.17432780228237,
+    "lng": 22.31691502727329
+  },
+  {
+    "name": "powiat garwoliński",
+    "lat": 51.826138947371064,
+    "lng": 21.647104025296095
+  },
+  {
+    "name": "powiat lipski",
+    "lat": 51.156739663181305,
+    "lng": 21.582560909124407
+  },
+  {
+    "name": "powiat hrubieszowski",
+    "lat": 50.73852802242296,
+    "lng": 23.87759720622869
+  },
+  {
+    "name": "powiat kraśnicki",
+    "lat": 50.91531798001391,
+    "lng": 22.142168312396414
+  },
+  {
+    "name": "powiat łęczyński",
+    "lat": 51.30949756886097,
+    "lng": 22.96859874724285
+  },
+  {
+    "name": "powiat opolski",
+    "lat": 51.1391114746776,
+    "lng": 21.979825228414725
+  },
+  {
+    "name": "powiat rycki",
+    "lat": 51.6475355775002,
+    "lng": 21.950405140355986
+  },
+  {
+    "name": "powiat Zamość",
+    "lat": 50.72049983359585,
+    "lng": 23.26234826226382
+  },
+  {
+    "name": "powiat dąbrowski",
+    "lat": 50.23146315599036,
+    "lng": 21.0066578829262
+  },
+  {
+    "name": "powiat krakowski",
+    "lat": 50.12815399942296,
+    "lng": 19.862260733410793
+  },
+  {
+    "name": "powiat wieruszowski",
+    "lat": 51.30298535130198,
+    "lng": 18.289877598979682
+  },
+  {
+    "name": "powiat żarski",
+    "lat": 51.675056574210124,
+    "lng": 14.961344329289595
+  },
+  {
+    "name": "powiat krośnieński",
+    "lat": 52.022503641233335,
+    "lng": 14.993645980546708
+  },
+  {
+    "name": "powiat dębicki",
+    "lat": 50.01100663219537,
+    "lng": 21.352509694591916
+  },
+  {
+    "name": "powiat namysłowski",
+    "lat": 51.032881588894476,
+    "lng": 17.75885954590638
+  },
+  {
+    "name": "powiat czarnkowsko-trzcianecki",
+    "lat": 52.913273793851886,
+    "lng": 16.368607924762706
+  },
+  {
+    "name": "powiat Płock",
+    "lat": 52.53795966723432,
+    "lng": 19.69852636300607
+  },
+  {
+    "name": "powiat grajewski",
+    "lat": 53.557329280610645,
+    "lng": 22.480098363063327
+  },
+  {
+    "name": "powiat starachowicki",
+    "lat": 51.038119088987614,
+    "lng": 21.106756747891158
+  },
+  {
+    "name": "powiat konecki",
+    "lat": 51.13627127900367,
+    "lng": 20.337970014339763
+  },
+  {
+    "name": "powiat elbląski",
+    "lat": 54.12689467550702,
+    "lng": 19.57652218536736
+  },
+  {
+    "name": "powiat nidzicki",
+    "lat": 53.36422732346078,
+    "lng": 20.47366854577315
+  },
+  {
+    "name": "powiat nowomiejski",
+    "lat": 53.43803887449105,
+    "lng": 19.524024448812035
+  },
+  {
+    "name": "powiat Ruda Śląska",
+    "lat": 50.26598485919324,
+    "lng": 18.868432913764252
+  },
+  {
+    "name": "powiat białogardzki",
+    "lat": 53.9759455269708,
+    "lng": 16.059875890047078
+  },
+  {
+    "name": "powiat tarnogórski",
+    "lat": 50.484235510293956,
+    "lng": 18.822959798701593
+  },
+  {
+    "name": "powiat zawierciański",
+    "lat": 50.522355647967075,
+    "lng": 19.612254397910775
+  },
+  {
+    "name": "powiat Chorzów",
+    "lat": 50.294928298313515,
+    "lng": 18.958838531861524
+  },
+  {
+    "name": "powiat Katowice",
+    "lat": 50.21759149094425,
+    "lng": 19.02529080355957
+  },
+  {
+    "name": "powiat bolesławiecki",
+    "lat": 51.33696033359058,
+    "lng": 15.53857318103248
+  },
+  {
+    "name": "powiat Wałbrzych",
+    "lat": 50.78482263551115,
+    "lng": 16.28913580531222
+  },
+  {
+    "name": "powiat sępoleński",
+    "lat": 53.42295357848268,
+    "lng": 17.52878960313094
+  },
+  {
+    "name": "powiat Włocławek",
+    "lat": 52.661302336914126,
+    "lng": 19.054675090904748
+  },
+  {
+    "name": "powiat hajnowski",
+    "lat": 52.7484648072163,
+    "lng": 23.582881766336467
+  },
+  {
+    "name": "powiat chrzanowski",
+    "lat": 50.113739143060954,
+    "lng": 19.445890287085373
+  },
+  {
+    "name": "powiat wejherowski",
+    "lat": 54.593382540898176,
+    "lng": 18.058719600814232
+  },
+  {
+    "name": "powiat Szczecin",
+    "lat": 53.43083078859686,
+    "lng": 14.615518679415288
+  },
+  {
+    "name": "powiat pucki",
+    "lat": 54.728535469879034,
+    "lng": 18.284764688637665
+  },
+  {
+    "name": "powiat rawski",
+    "lat": 51.765832303854985,
+    "lng": 20.401766926651696
+  },
+  {
+    "name": "powiat łowicki",
+    "lat": 52.11356533306213,
+    "lng": 19.866869515699275
+  },
+  {
+    "name": "powiat skierniewicki",
+    "lat": 51.92218670842761,
+    "lng": 20.148188529744488
+  },
+  {
+    "name": "powiat iławski",
+    "lat": 53.654577390250765,
+    "lng": 19.54757741861546
+  },
+  {
+    "name": "powiat niżański",
+    "lat": 50.46959591789997,
+    "lng": 22.283929531134657
+  },
+  {
+    "name": "powiat tarnobrzeski",
+    "lat": 50.52037676356585,
+    "lng": 21.75703336639228
+  },
+  {
+    "name": "powiat nowodworski",
+    "lat": 52.45986530942705,
+    "lng": 20.67829366166253
+  },
+  {
+    "name": "powiat pruszkowski",
+    "lat": 52.1233726073283,
+    "lng": 20.805119633334712
+  },
+  {
+    "name": "powiat przysuski",
+    "lat": 51.415426074148414,
+    "lng": 20.633061284799812
+  },
+  {
+    "name": "powiat białobrzeski",
+    "lat": 51.6219726529759,
+    "lng": 20.95547648670676
+  },
+  {
+    "name": "powiat wyszkowski",
+    "lat": 52.64592882833325,
+    "lng": 21.466960917779428
+  },
+  {
+    "name": "powiat biłgorajski",
+    "lat": 50.51064604891432,
+    "lng": 22.7872123016998
+  },
+  {
+    "name": "powiat chełmski",
+    "lat": 51.12895354289947,
+    "lng": 23.502690759724285
+  },
+  {
+    "name": "powiat parczewski",
+    "lat": 51.62032442609711,
+    "lng": 23.00327249633046
+  },
+  {
+    "name": "powiat świdnicki",
+    "lat": 51.13513187986016,
+    "lng": 22.837984244415672
+  },
+  {
+    "name": "powiat kutnowski",
+    "lat": 52.24200749265349,
+    "lng": 19.391524893989722
+  },
+  {
+    "name": "powiat łódzki wschodni",
+    "lat": 51.67733728021863,
+    "lng": 19.65381132277748
+  },
+  {
+    "name": "powiat kolbuszowski",
+    "lat": 50.29621455701277,
+    "lng": 21.797744475861688
+  },
+  {
+    "name": "powiat oleski",
+    "lat": 50.91128511239986,
+    "lng": 18.46376780412357
+  },
+  {
+    "name": "powiat strzelecki",
+    "lat": 50.53836958442036,
+    "lng": 18.32117568925848
+  },
+  {
+    "name": "powiat złotowski",
+    "lat": 53.40984502992971,
+    "lng": 16.921388682590724
+  },
+  {
+    "name": "powiat Suwałki",
+    "lat": 54.10215532418891,
+    "lng": 22.935386991500383
+  },
+  {
+    "name": "powiat kościański",
+    "lat": 52.04901969417086,
+    "lng": 16.704119190168072
+  },
+  {
+    "name": "powiat grodziski",
+    "lat": 52.17787137759877,
+    "lng": 16.36050460679904
+  },
+  {
+    "name": "powiat szamotulski",
+    "lat": 52.60169766087444,
+    "lng": 16.41411998712471
+  },
+  {
+    "name": "powiat Kielce",
+    "lat": 50.859637702763266,
+    "lng": 20.604408362630316
+  },
+  {
+    "name": "powiat staszowski",
+    "lat": 50.53984205642519,
+    "lng": 21.215414789219203
+  },
+  {
+    "name": "powiat ełcki",
+    "lat": 53.821809459857306,
+    "lng": 22.4010879524942
+  },
+  {
+    "name": "powiat dzierżoniowski",
+    "lat": 50.73681301122618,
+    "lng": 16.70059810802282
+  },
+  {
+    "name": "powiat tczewski",
+    "lat": 53.93237262827433,
+    "lng": 18.733822749254358
+  },
+  {
+    "name": "powiat kołobrzeski",
+    "lat": 54.06947794043795,
+    "lng": 15.601577450333602
+  },
+  {
+    "name": "powiat Koszalin",
+    "lat": 54.202055683380216,
+    "lng": 16.205057728749935
+  },
+  {
+    "name": "powiat kłobucki",
+    "lat": 50.936161592954264,
+    "lng": 18.86204427026158
+  },
+  {
+    "name": "powiat gliwicki",
+    "lat": 50.35595332215895,
+    "lng": 18.539178647960632
+  },
+  {
+    "name": "powiat lubliniecki",
+    "lat": 50.67937597052614,
+    "lng": 18.77000953530437
+  },
+  {
+    "name": "powiat Bielsko-Biała",
+    "lat": 49.81297454865605,
+    "lng": 19.036880862369706
+  },
+  {
+    "name": "powiat Legnica",
+    "lat": 51.20042260370514,
+    "lng": 16.167754356140446
+  },
+  {
+    "name": "powiat grudziądzki",
+    "lat": 53.47753830972312,
+    "lng": 18.956828543708355
+  },
+  {
+    "name": "powiat wołowski",
+    "lat": 51.372471395674154,
+    "lng": 16.61773556590126
+  },
+  {
+    "name": "powiat toruński",
+    "lat": 53.04397792615202,
+    "lng": 18.65348191490812
+  },
+  {
+    "name": "powiat chełmiński",
+    "lat": 53.301465696060056,
+    "lng": 18.516500382310525
+  },
+  {
+    "name": "powiat wodzisławski",
+    "lat": 49.99686406083526,
+    "lng": 18.429056278348074
+  },
+  {
+    "name": "powiat leski",
+    "lat": 49.31663688986115,
+    "lng": 22.374578042312056
+  },
+  {
+    "name": "powiat bieszczadzki",
+    "lat": 49.31997734572592,
+    "lng": 22.622687712266746
+  },
+  {
+    "name": "powiat prudnicki",
+    "lat": 50.367979203659054,
+    "lng": 17.704318493310435
+  },
+  {
+    "name": "powiat ząbkowicki",
+    "lat": 50.57226091419446,
+    "lng": 16.879200874776842
+  },
+  {
+    "name": "powiat makowski",
+    "lat": 52.92476340060105,
+    "lng": 21.20353717837889
+  },
+  {
+    "name": "powiat pszczyński",
+    "lat": 49.99215210295982,
+    "lng": 18.8845539158125
+  },
+  {
+    "name": "powiat gołdapski",
+    "lat": 54.27578174956301,
+    "lng": 22.324969959007024
+  },
+  {
+    "name": "powiat Sopot",
+    "lat": 54.44006887285919,
+    "lng": 18.54437686304758
+  },
+  {
+    "name": "powiat rzeszowski",
+    "lat": 50.0411246286255,
+    "lng": 22.058116361935422
+  },
+  {
+    "name": "powiat jeleniogórski",
+    "lat": 50.85819852562107,
+    "lng": 15.693122500184469
+  },
+  {
+    "name": "powiat świdnicki",
+    "lat": 50.8943406459474,
+    "lng": 16.439319875590527
+  },
+  {
+    "name": "powiat opoczyński",
+    "lat": 51.381923144559664,
+    "lng": 20.22902987148295
+  },
+  {
+    "name": "powiat człuchowski",
+    "lat": 53.72909459468387,
+    "lng": 17.169252955249434
+  },
+  {
+    "name": "powiat ostrowski",
+    "lat": 51.615000581774055,
+    "lng": 17.80169196075472
+  },
+  {
+    "name": "powiat Kalisz",
+    "lat": 51.74501048310944,
+    "lng": 18.07464865576267
+  },
+  {
+    "name": "powiat strzyżowski",
+    "lat": 49.870629578604714,
+    "lng": 21.75519596947198
+  },
+  {
+    "name": "powiat miński",
+    "lat": 52.18332302628487,
+    "lng": 21.66099958633286
+  },
+  {
+    "name": "powiat zwoleński",
+    "lat": 51.34705245893189,
+    "lng": 21.602481837435384
+  },
+  {
+    "name": "powiat żuromiński",
+    "lat": 53.030076251362566,
+    "lng": 19.90322141324978
+  },
+  {
+    "name": "powiat lubelski",
+    "lat": 51.140171404529355,
+    "lng": 22.492696738250768
+  },
+  {
+    "name": "powiat proszowicki",
+    "lat": 50.20200858025553,
+    "lng": 20.33904218759582
+  },
+  {
+    "name": "powiat wielicki",
+    "lat": 49.97903191384599,
+    "lng": 20.19448615868199
+  },
+  {
+    "name": "powiat sieradzki",
+    "lat": 51.58519120858536,
+    "lng": 18.600132553567196
+  },
+  {
+    "name": "powiat brzeziński",
+    "lat": 51.83591031160567,
+    "lng": 19.813740201224917
+  },
+  {
+    "name": "powiat strzelecko-drezdenecki",
+    "lat": 52.88862125724686,
+    "lng": 15.711456231932699
+  },
+  {
+    "name": "powiat świebodziński",
+    "lat": 52.2462934388745,
+    "lng": 15.490318533388274
+  },
+  {
+    "name": "powiat leżajski",
+    "lat": 50.267497686282056,
+    "lng": 22.41886418148611
+  },
+  {
+    "name": "powiat lubaczowski",
+    "lat": 50.20664959559471,
+    "lng": 23.164863147738902
+  },
+  {
+    "name": "powiat chodzieski",
+    "lat": 52.96436236206689,
+    "lng": 16.990290823061645
+  },
+  {
+    "name": "powiat międzychodzki",
+    "lat": 52.6031761788573,
+    "lng": 16.023817326574573
+  },
+  {
+    "name": "powiat kluczborski",
+    "lat": 50.99833898903174,
+    "lng": 18.169852119578678
+  },
+  {
+    "name": "powiat jędrzejowski",
+    "lat": 50.64161793013813,
+    "lng": 20.223424559292415
+  },
+  {
+    "name": "powiat gostyński",
+    "lat": 51.829849181352195,
+    "lng": 17.062304460023107
+  },
+  {
+    "name": "powiat kazimierski",
+    "lat": 50.27639634214525,
+    "lng": 20.517563127934395
+  },
+  {
+    "name": "powiat kaliski",
+    "lat": 51.796607588494,
+    "lng": 18.217696162732665
+  },
+  {
+    "name": "powiat siemiatycki",
+    "lat": 52.483192359512806,
+    "lng": 22.89869387004543
+  },
+  {
+    "name": "powiat gdański",
+    "lat": 54.22240627822001,
+    "lng": 18.597815507549782
+  },
+  {
+    "name": "powiat szczycieński",
+    "lat": 53.544335588425795,
+    "lng": 21.016668553843466
+  },
+  {
+    "name": "powiat łobeski",
+    "lat": 53.650511458102606,
+    "lng": 15.483401565736507
+  },
+  {
+    "name": "powiat gryficki",
+    "lat": 53.95446303583543,
+    "lng": 15.228045218036367
+  },
+  {
+    "name": "powiat myszkowski",
+    "lat": 50.60964472459095,
+    "lng": 19.308329536924578
+  },
+  {
+    "name": "powiat oleśnicki",
+    "lat": 51.263098814745675,
+    "lng": 17.508899268352
+  },
+  {
+    "name": "powiat strzeliński",
+    "lat": 50.773393236642484,
+    "lng": 17.092869303664063
+  },
+  {
+    "name": "powiat wąbrzeski",
+    "lat": 53.27831174657174,
+    "lng": 18.931736698656852
+  },
+  {
+    "name": "powiat kętrzyński",
+    "lat": 54.146691993855434,
+    "lng": 21.315388473205836
+  },
+  {
+    "name": "powiat białostocki",
+    "lat": 53.09955296092825,
+    "lng": 23.235368315321598
+  },
+  {
+    "name": "powiat augustowski",
+    "lat": 53.81321371153595,
+    "lng": 23.110002520084354
+  },
+  {
+    "name": "powiat wałbrzyski",
+    "lat": 50.745512297483536,
+    "lng": 16.258196205679393
+  },
+  {
+    "name": "powiat kłodzki",
+    "lat": 50.37307028865752,
+    "lng": 16.614300191506693
+  },
+  {
+    "name": "powiat Tychy",
+    "lat": 50.122383166857716,
+    "lng": 19.001446534022847
+  },
+  {
+    "name": "powiat Rybnik",
+    "lat": 50.106617404045096,
+    "lng": 18.545599349086995
+  },
+  {
+    "name": "powiat sokołowski",
+    "lat": 52.49128746705658,
+    "lng": 22.284478622070875
+  },
+  {
+    "name": "powiat grójecki",
+    "lat": 51.78855550688962,
+    "lng": 20.849324358619
+  },
+  {
+    "name": "powiat lubartowski",
+    "lat": 51.51568104616446,
+    "lng": 22.56012174207356
+  },
+  {
+    "name": "powiat puławski",
+    "lat": 51.41511158816113,
+    "lng": 22.057333575309276
+  },
+  {
+    "name": "powiat radzyński",
+    "lat": 51.79305001718159,
+    "lng": 22.679625585193325
+  },
+  {
+    "name": "powiat Biała Podlaska",
+    "lat": 52.02915071405502,
+    "lng": 23.137507837116576
+  },
+  {
+    "name": "powiat Nowy Sącz",
+    "lat": 49.60759297188405,
+    "lng": 20.707366550617664
+  },
+  {
+    "name": "powiat Gorzów Wielkopolski",
+    "lat": 52.732503081634135,
+    "lng": 15.218668288332234
+  },
+  {
+    "name": "powiat pilski",
+    "lat": 53.16259581106325,
+    "lng": 16.957451457773512
+  },
+  {
+    "name": "powiat wysokomazowiecki",
+    "lat": 52.87517016242032,
+    "lng": 22.564316688212017
+  },
+  {
+    "name": "powiat buski",
+    "lat": 50.436692932005144,
+    "lng": 20.858130501200723
+  },
+  {
+    "name": "powiat śremski",
+    "lat": 52.06932054055805,
+    "lng": 17.059405603364173
+  },
+  {
+    "name": "powiat kępiński",
+    "lat": 51.2400270392196,
+    "lng": 17.962932687939183
+  },
+  {
+    "name": "powiat turecki",
+    "lat": 52.0015427158712,
+    "lng": 18.50974666974902
+  },
+  {
+    "name": "powiat opatowski",
+    "lat": 50.83964628789783,
+    "lng": 21.508735427862298
+  },
+  {
+    "name": "powiat Słupsk",
+    "lat": 54.46768612378082,
+    "lng": 17.029334779344897
+  },
+  {
+    "name": "powiat pińczowski",
+    "lat": 50.477905958675024,
+    "lng": 20.49952902082271
+  },
+  {
+    "name": "powiat koszaliński",
+    "lat": 54.11404840509596,
+    "lng": 16.375839891037323
+  },
+  {
+    "name": "powiat bielski",
+    "lat": 49.83451725410452,
+    "lng": 19.05055887608873
+  },
+  {
+    "name": "powiat będziński",
+    "lat": 50.40660394311693,
+    "lng": 19.156690523072665
+  },
+  {
+    "name": "powiat węgorzewski",
+    "lat": 54.213049646360226,
+    "lng": 21.771137545968863
+  },
+  {
+    "name": "powiat bieruńsko-lędziński",
+    "lat": 50.09817533492974,
+    "lng": 19.142304535002367
+  },
+  {
+    "name": "powiat policki",
+    "lat": 53.565650067013486,
+    "lng": 14.428956464076316
+  },
+  {
+    "name": "powiat polkowicki",
+    "lat": 51.50700578071163,
+    "lng": 15.996117924138503
+  },
+  {
+    "name": "powiat Jastrzębie-Zdrój",
+    "lat": 49.95712697307318,
+    "lng": 18.614413602714723
+  },
+  {
+    "name": "powiat tatrzański",
+    "lat": 49.29741476784183,
+    "lng": 19.98264319887953
+  },
+  {
+    "name": "powiat nowotarski",
+    "lat": 49.480052172929334,
+    "lng": 20.020249865046527
+  },
+  {
+    "name": "powiat lwówecki",
+    "lat": 51.02458927072882,
+    "lng": 15.530094769322725
+  },
+  {
+    "name": "powiat legionowski",
+    "lat": 52.44674178890637,
+    "lng": 20.958814019950857
+  },
+  {
+    "name": "powiat olecki",
+    "lat": 54.05202162169807,
+    "lng": 22.414786358261296
+  },
+  {
+    "name": "powiat tomaszowski",
+    "lat": 51.603236237254734,
+    "lng": 20.049643498683363
+  },
+  {
+    "name": "powiat zambrowski",
+    "lat": 53.00578034549276,
+    "lng": 22.260308283224266
+  },
+  {
+    "name": "powiat bytowski",
+    "lat": 54.141341409069405,
+    "lng": 17.323293313604598
+  },
+  {
+    "name": "powiat płocki",
+    "lat": 52.55031715254142,
+    "lng": 19.839874111272458
+  },
+  {
+    "name": "powiat pułtuski",
+    "lat": 52.6771248348016,
+    "lng": 21.042356393647424
+  },
+  {
+    "name": "powiat sochaczewski",
+    "lat": 52.26675141483061,
+    "lng": 20.21495766687681
+  },
+  {
+    "name": "powiat ciechanowski",
+    "lat": 52.85759237088453,
+    "lng": 20.606283496948592
+  },
+  {
+    "name": "powiat bialski",
+    "lat": 51.9745582189152,
+    "lng": 23.210713278243603
+  },
+  {
+    "name": "powiat krasnostawski",
+    "lat": 50.959812837844595,
+    "lng": 23.09900528500464
+  },
+  {
+    "name": "powiat zamojski",
+    "lat": 50.712235358307396,
+    "lng": 23.234794427765685
+  },
+  {
+    "name": "powiat tarnowski",
+    "lat": 49.94650808541287,
+    "lng": 20.966516206595436
+  },
+  {
+    "name": "powiat bełchatowski",
+    "lat": 51.36050671075173,
+    "lng": 19.24785083986075
+  },
+  {
+    "name": "powiat łaski",
+    "lat": 51.533770297684896,
+    "lng": 19.061266569271982
+  },
+  {
+    "name": "powiat łęczycki",
+    "lat": 52.09334817704041,
+    "lng": 19.182089052054465
+  },
+  {
+    "name": "powiat pajęczański",
+    "lat": 51.15455717367112,
+    "lng": 19.029850480661178
+  },
+  {
+    "name": "powiat radomszczański",
+    "lat": 51.058219408553484,
+    "lng": 19.62091924334129
+  },
+  {
+    "name": "powiat zduńskowolski",
+    "lat": 51.640152846271704,
+    "lng": 18.942813109711725
+  },
+  {
+    "name": "powiat nowosolski",
+    "lat": 51.80147240904748,
+    "lng": 15.74835738550842
+  },
+  {
+    "name": "powiat jarosławski",
+    "lat": 50.00631127843523,
+    "lng": 22.763362620758375
+  },
+  {
+    "name": "powiat mielecki",
+    "lat": 50.29124459661445,
+    "lng": 21.38997568725572
+  },
+  {
+    "name": "powiat Warszawa",
+    "lat": 52.22884055371025,
+    "lng": 21.048556565077693
+  },
+  {
+    "name": "powiat krapkowicki",
+    "lat": 50.458667105985796,
+    "lng": 17.966122287977765
+  },
+  {
+    "name": "powiat moniecki",
+    "lat": 53.41100749004952,
+    "lng": 22.79186838400407
+  },
+  {
+    "name": "powiat kielecki",
+    "lat": 50.831557524632444,
+    "lng": 20.706738302038627
+  },
+  {
+    "name": "powiat wrzesiński",
+    "lat": 52.252133158293034,
+    "lng": 17.591354137697277
+  },
+  {
+    "name": "powiat gnieźnieński",
+    "lat": 52.53822879457116,
+    "lng": 17.597777524765977
+  },
+  {
+    "name": "powiat malborski",
+    "lat": 54.074505950289826,
+    "lng": 19.01292838032135
+  },
+  {
+    "name": "powiat lidzbarski",
+    "lat": 54.112444040035804,
+    "lng": 20.407150346513806
+  },
+  {
+    "name": "powiat olsztyński",
+    "lat": 53.80770054004709,
+    "lng": 20.552571313843185
+  },
+  {
+    "name": "powiat sławieński",
+    "lat": 54.37504604245324,
+    "lng": 16.59234170982144
+  },
+  {
+    "name": "powiat działdowski",
+    "lat": 53.270531205429435,
+    "lng": 20.01989922894836
+  },
+  {
+    "name": "powiat górowski",
+    "lat": 51.63184606933037,
+    "lng": 16.554686381716355
+  },
+  {
+    "name": "powiat sztumski",
+    "lat": 53.913656064590604,
+    "lng": 19.228923333034032
+  },
+  {
+    "name": "powiat kwidzyński",
+    "lat": 53.72960006375409,
+    "lng": 19.018242746620732
+  },
+  {
+    "name": "powiat Dąbrowa Górnicza",
+    "lat": 50.35471539397725,
+    "lng": 19.30129910687302
+  },
+  {
+    "name": "powiat Mysłowice",
+    "lat": 50.19729513072154,
+    "lng": 19.146180621071995
+  },
+  {
+    "name": "powiat myśliborski",
+    "lat": 52.87210086961842,
+    "lng": 14.884308436000246
+  },
+  {
+    "name": "powiat golubsko-dobrzyński",
+    "lat": 53.10355219820376,
+    "lng": 19.030701550134438
+  },
+  {
+    "name": "powiat aleksandrowski",
+    "lat": 52.79981086718154,
+    "lng": 18.731437809425092
+  },
+  {
+    "name": "powiat świecki",
+    "lat": 53.51185909720174,
+    "lng": 18.402260445420982
+  },
+  {
+    "name": "powiat pleszewski",
+    "lat": 51.91724164437361,
+    "lng": 17.809892955786896
+  },
+  {
+    "name": "powiat Krosno",
+    "lat": 49.68990615582145,
+    "lng": 21.757020705527918
+  },
+  {
+    "name": "powiat sejneński",
+    "lat": 54.087464874896575,
+    "lng": 23.30295499405064
+  },
+  {
+    "name": "powiat sanocki",
+    "lat": 49.45976652208874,
+    "lng": 22.13548624906346
+  },
+  {
+    "name": "powiat suski",
+    "lat": 49.691500542549555,
+    "lng": 19.64745641476623
+  },
+  {
+    "name": "powiat zielonogórski",
+    "lat": 51.98638247072307,
+    "lng": 15.543918779470003
+  },
+  {
+    "name": "powiat wołomiński",
+    "lat": 52.40440105452547,
+    "lng": 21.366123580215252
+  },
+  {
+    "name": "powiat mikołowski",
+    "lat": 50.145228501279455,
+    "lng": 18.831118345735483
+  },
+  {
+    "name": "powiat goleniowski",
+    "lat": 53.63320269691243,
+    "lng": 14.884813941531345
+  },
+  {
+    "name": "powiat Rzeszów",
+    "lat": 50.02016190098867,
+    "lng": 21.993043529559504
+  },
+  {
+    "name": "powiat łomżyński",
+    "lat": 53.199263775979816,
+    "lng": 22.074806768040126
+  },
+  {
+    "name": "powiat opolski",
+    "lat": 50.720525613944965,
+    "lng": 17.90343854283598
+  },
+  {
+    "name": "powiat wałecki",
+    "lat": 53.23660972410907,
+    "lng": 16.270789190734643
+  },
+  {
+    "name": "powiat drawski",
+    "lat": 53.47339319269681,
+    "lng": 15.991875069312847
+  },
+  {
+    "name": "powiat chojnicki",
+    "lat": 53.80941010410704,
+    "lng": 17.68748522087888
+  },
+  {
+    "name": "powiat przeworski",
+    "lat": 50.09385233899226,
+    "lng": 22.53901951655393
+  },
+  {
+    "name": "powiat otwocki",
+    "lat": 52.05085790977644,
+    "lng": 21.36348743730659
+  },
+  {
+    "name": "powiat kozienicki",
+    "lat": 51.62218722841866,
+    "lng": 21.46398883020226
+  },
+  {
+    "name": "powiat janowski",
+    "lat": 50.72691508104732,
+    "lng": 22.430180879434875
+  },
+  {
+    "name": "powiat limanowski",
+    "lat": 49.678439975295596,
+    "lng": 20.285184419847127
+  },
+  {
+    "name": "powiat miechowski",
+    "lat": 50.39109799785316,
+    "lng": 20.069946600752523
+  },
+  {
+    "name": "powiat myślenicki",
+    "lat": 49.80619266848344,
+    "lng": 19.97446067471448
+  },
+  {
+    "name": "powiat olkuski",
+    "lat": 50.32228061328727,
+    "lng": 19.63611303601096
+  },
+  {
+    "name": "powiat oświęcimski",
+    "lat": 49.98306890478028,
+    "lng": 19.277020736811284
+  },
+  {
+    "name": "powiat Piotrków Trybunalski",
+    "lat": 51.41225437885598,
+    "lng": 19.700639211056743
+  },
+  {
+    "name": "powiat poddębicki",
+    "lat": 51.89060672964385,
+    "lng": 18.90389442481168
+  },
+  {
+    "name": "powiat wieluński",
+    "lat": 51.232070744928,
+    "lng": 18.622400769015076
+  },
+  {
+    "name": "powiat brzozowski",
+    "lat": 49.71937263873519,
+    "lng": 22.072277807208064
+  },
+  {
+    "name": "powiat kędzierzyńsko-kozielski",
+    "lat": 50.286260333192615,
+    "lng": 18.159579956580213
+  },
+  {
+    "name": "powiat krotoszyński",
+    "lat": 51.74324302624128,
+    "lng": 17.428916210261242
+  },
+  {
+    "name": "powiat Białystok",
+    "lat": 53.13372734524404,
+    "lng": 23.159710364248028
+  },
+  {
+    "name": "powiat wolsztyński",
+    "lat": 52.07123734113908,
+    "lng": 16.12476781123864
+  },
+  {
+    "name": "powiat sandomierski",
+    "lat": 50.68522568810179,
+    "lng": 21.62797596207235
+  },
+  {
+    "name": "powiat szczecinecki",
+    "lat": 53.73506828955598,
+    "lng": 16.581281379556927
+  },
+  {
+    "name": "powiat świdwiński",
+    "lat": 53.79723144913443,
+    "lng": 15.880536151583174
+  },
+  {
+    "name": "powiat piski",
+    "lat": 53.66170563164501,
+    "lng": 21.841564008555018
+  },
+  {
+    "name": "powiat Świętochłowice",
+    "lat": 50.29755656466923,
+    "lng": 18.909445481636887
+  },
+  {
+    "name": "powiat Zabrze",
+    "lat": 50.315081507625834,
+    "lng": 18.785258443176666
+  },
+  {
+    "name": "powiat Olsztyn",
+    "lat": 53.78205996915067,
+    "lng": 20.47808939576793
+  },
+  {
+    "name": "powiat braniewski",
+    "lat": 54.29916538276943,
+    "lng": 19.97355124471837
+  },
+  {
+    "name": "powiat kamieński",
+    "lat": 53.89802044349672,
+    "lng": 14.752970192709716
+  },
+  {
+    "name": "powiat Częstochowa",
+    "lat": 50.80533180702932,
+    "lng": 19.119501125807624
+  },
+  {
+    "name": "powiat trzebnicki",
+    "lat": 51.37245157440918,
+    "lng": 16.999613007918448
+  },
+  {
+    "name": "powiat bydgoski",
+    "lat": 53.19229190504225,
+    "lng": 18.01406875606009
+  },
+  {
+    "name": "powiat oławski",
+    "lat": 50.959976771009615,
+    "lng": 17.306810987067365
+  },
+  {
+    "name": "powiat średzki",
+    "lat": 51.132494726921315,
+    "lng": 16.623673723867345
+  },
+  {
+    "name": "powiat legnicki",
+    "lat": 51.23497253885208,
+    "lng": 16.143565822524334
+  },
+  {
+    "name": "powiat Bydgoszcz",
+    "lat": 53.13007924579621,
+    "lng": 18.053174253214678
+  },
+  {
+    "name": "powiat Grudziądz",
+    "lat": 53.47238357335281,
+    "lng": 18.773203988362333
+  },
+  {
+    "name": "powiat rypiński",
+    "lat": 53.04605580342083,
+    "lng": 19.41410679734941
+  },
+  {
+    "name": "powiat gorlicki",
+    "lat": 49.600124160990525,
+    "lng": 21.174145065414443
+  },
+  {
+    "name": "powiat lubański",
+    "lat": 51.07614205235467,
+    "lng": 15.27916315026695
+  },
+  {
+    "name": "powiat wadowicki",
+    "lat": 49.88210666080064,
+    "lng": 19.526421177860424
+  },
+  {
+    "name": "powiat ostrołęcki",
+    "lat": 53.162739621257,
+    "lng": 21.499662159638042
+  },
+  {
+    "name": "powiat Żory",
+    "lat": 50.03674042134923,
+    "lng": 18.695002646047367
+  },
+  {
+    "name": "powiat nowodworski",
+    "lat": 54.275824760329265,
+    "lng": 19.19178647820419
+  },
+  {
+    "name": "powiat jaworski",
+    "lat": 51.01751216864052,
+    "lng": 16.153933862208458
+  },
+  {
+    "name": "powiat poznański",
+    "lat": 52.39324876762936,
+    "lng": 16.945540889483123
+  },
+  {
+    "name": "powiat koniński",
+    "lat": 52.28009962569844,
+    "lng": 18.26507499728009
+  }
+]

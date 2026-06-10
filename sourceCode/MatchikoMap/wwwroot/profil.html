@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/publicResources/favicon.ico">
+    <title>Mój Profil - MatchikoMap</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            background: radial-gradient(circle at top, #0f172a, #020617);
+            color: #e5e7eb;
+        }
+
+        .profile-container {
+            max-width: 900px;
+            margin: 60px auto;
+            background: #020617;
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.45);
+            overflow: hidden;
+            border: 1px solid #3d1b46;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #a855f7;
+            text-decoration: none;
+            font-size: 12px;
+            border: 1px solid #a855f7;
+            padding: 5px 12px;
+            border-radius: 4px;
+            transition: 0.3s;
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            background: rgba(168, 85, 247, 0.2);
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        }
+
+        .icon-pink {
+            color: #e803ec;
+            filter: drop-shadow(0 0 5px rgba(168, 85, 247, 0.6));
+        }
+
+
+        .buddy-icon {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            user-select: none;
+            transition: color 0.3s ease, filter 0.3s ease;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+            padding: 45px;
+            background: linear-gradient(135deg, #1b0720, #6a1d9e);
+        }
+
+        #avatar-display {
+            width: 180px;
+            height: 180px;
+            border-radius: 16px;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #834d9c;
+            box-shadow: 0 0 20px rgba(141, 65, 156, 0.6);
+            cursor: default;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .user-info h1 {
+            margin: 0;
+            font-size: 36px;
+            letter-spacing: 1px;
+        }
+
+        .user-info p {
+            margin: 10px 0 20px;
+            color: #020617;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.85);
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .edit-btn {
+            display: block;
+            background: transparent;
+            color: #e5e7eb;
+            border: 2px solid #a855f7;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            text-decoration: none;
+            transition: 0.3s;
+            width: fit-content;
+        }
+
+        .edit-btn:hover {
+            background: #a855f7;
+            color: #020617;
+        }
+
+        .profile-content {
+            padding: 36px 36px 10px 36px; 
+        }
+
+        .section-title {
+            font-size: clamp(14px, 4vw, 20px);
+            color: #a855f7;
+            margin-bottom: 16px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+            .section-title .buddy-icon {
+                margin-right: 8px !important;
+                flex-shrink: 0 !important;
+            }
+
+        .about-box {
+            background: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            line-height: 1.7;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+    .hidden{
+        display: none;
+    }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            background: #a855f7;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .info-row {
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+       
+.single-preferences-box {
+    padding: 0 36px;
+    margin-bottom: 20px;
+    color: #ff00ffe8; 
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+}
+
+        .preferences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 0 36px 36px 36px; 
+        }
+
+        .pref-header-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: clamp(12px, 4vw, 18px);
+            color: #a855f7;
+            margin: 0;
+            white-space: nowrap;
+            flex-shrink: 1;
+        }
+
+        .pref-box {
+            background: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 16px;
+            min-height: 100px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+            .pref-box:hover {
+                border-color: #a855f7;
+                box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+            }
+
+        .dynamic-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            cursor: pointer;
+        }
+
+            .dynamic-lightbox img {
+                max-width: 90dvw;
+                max-height: 90dvh;
+                width: 100%; 
+                height: 100%;
+                object-fit: contain;
+                border-radius: 8px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                cursor: pointer;
+            }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: 20px 10px;
+                width: calc(100% - 20px);
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 30px 20px;
+                gap: 20px;
+            }
+
+            #avatar-display {
+                width: 140px;
+                height: 140px;
+            }
+
+            .user-info {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+                .user-info h1 {
+                    font-size: 26px;
+                }
+
+            #profile-main-info {
+                margin-bottom: 20px;
+                width: 100%;
+            }
+
+            .btn-group {
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .edit-btn {
+                flex: 1;
+                max-width: 180px;
+                text-align: center;
+                padding: 10px 5px;
+                font-size: 11px;
+            }
+
+            .profile-content {
+                padding: 20px;
+            }
+
+            .preferences-grid {
+                grid-template-columns: 1fr;
+                padding: 0 20px 20px 20px;
+            }
+
+            .single-preferences-box {
+                padding: 0 20px;
+                margin-left: 15px;
+            }
+
+            .back-btn {
+                position: static;
+                display: inline-flex;
+                align-items: center;
+                align-self: flex-start;
+                margin-left: 20px;
+                margin-bottom: 25px;
+                font-size: 13px;
+                padding: 8px 14px;
+                border-radius: 8px;
+                width: fit-content;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <a href="mapa.html" class="back-btn">← POWRÓT</a>
+            <div id="avatar-display"></div>
+            <div class="user-info">
+                <h1 id="profile-name">...</h1>
+                <p id="profile-tags">...</p>
+                <div id="profile-main-info"></div>
+                <div class="btn-group">
+                    <a href="profil_edit.html" id="edit-btn" class="edit-btn">EDYTUJ PROFIL</a>
+                    <button class="edit-btn" id="friend-btn">DODAJ DO ZNAJOMYCH</button>
+                    <button class="edit-btn" id="report-btn">ZGŁOŚ UŻYTKOWNIKA</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-content">
+
+            <div class="section-title"><span class="buddy-icon icon-pink">assignment_ind</span> O UŻYTKOWNIKU</div>
+            <div class="about-box" id="profile-desc">
+                Użytkownik nie dodał żadnego opisu...
+            </div>
+            <div class="section-title" style="margin-top: 24px;">
+                <span class="buddy-icon icon-pink">settings_accessibility</span> PREFERENCJE
+            </div>
+            <div class="single-preferences-box">
+                <div id="profile-preferences"></div>
+            </div>
+
+        </div>
+
+        <div class="preferences-grid">
+            <!-- HOBBY -->
+            <div class="pref-box">
+                <div class="pref-header-wrapper">
+                    <span class="buddy-icon icon-pink">theater_comedy</span>
+                    <div class="section-title">HOBBY</div>
+                </div>
+                <div id="profile-hobby" class="tags-container"></div>
+            </div>
+
+            <!-- GATUNKI GIER -->
+            <div class="pref-box">
+                <div class="pref-header-wrapper">
+                    <span class="buddy-icon icon-pink">interests</span>
+                    <div class="section-title">GATUNKI GIER</div>
+                </div>
+                <div id="profile-games" class="tags-container"></div>
+            </div>
+
+            <!-- ULUBIONE TYTUŁY -->
+            <div class="pref-box">
+                <div class="pref-header-wrapper">
+                    <span class="buddy-icon icon-pink">military_tech</span>
+                    <div class="section-title">ULUBIONE TYTUŁY</div>
+                </div>
+                <div id="profile-favoriteGames" class="tags-container"></div>
+            </div>
+
+            <!-- KSIĄŻKI -->
+            <div class="pref-box">
+                <div class="pref-header-wrapper">
+                    <span class="buddy-icon icon-pink">menu_book</span>
+                    <div class="section-title">KSIĄŻKI</div>
+                </div>
+                <div id="profile-books" class="tags-container"></div>
+            </div>
+
+            <!-- JEDZENIE I NAPOJE -->
+            <div class="pref-box">
+                <div class="pref-header-wrapper">
+                    <span class="buddy-icon icon-pink">fastfood</span>
+                    <div class="section-title">JEDZENIE I NAPOJE</div>
+                </div>
+                <div id="profile-food" class="tags-container"></div>
+            </div>
+
+            <!-- MUZYKA -->
+            <div class="pref-box">
+                <div class="pref-header-wrapper">
+                    <span class="buddy-icon icon-pink">music_note</span>
+                    <div class="section-title">MUZYKA</div>
+                </div>
+                <div id="profile-music" class="tags-container"></div>
+            </div>
+            </div>
+        </div>
+
+</body>
+
+</html>
+<link rel="stylesheet" href="/css/toast.css">
+<script src="./js/authFetch.js"></script>
+<script src="./js/avatar.js"></script>
+<script src="js/toast.js"></script>
+<script>
+    async function loadProfile() {
+        const avatarDiv = document.getElementById('avatar-display');
+        const nameElement = document.getElementById('profile-name');
+        const tagsElement = document.getElementById('profile-tags');
+        const descElement = document.getElementById('profile-desc');
+        const mainInfo = document.getElementById("profile-main-info");
+        const hobbyDiv = document.getElementById("profile-hobby");
+        const prefDiv = document.getElementById("profile-preferences");
+        const gamesDiv = document.getElementById("profile-games");
+        const booksDiv = document.getElementById("profile-books");
+        const foodDiv = document.getElementById("profile-food");
+        const drinkDiv = document.getElementById("profile-drink");
+        const musicDiv = document.getElementById("profile-music");
+        const favGamesDiv = document.getElementById("profile-favoriteGames");
+        const friendBtn = document.getElementById("friend-btn");
+
+        try {
+
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get("id");
+
+            let url = '/api/Profile';
+            let myId = null;
+
+            try {
+                const response = await authFetch(`${url}/whoami`);
+
+                if (!response.ok) {
+                    throw new Error(`Błąd sieci: ${response.status}`);
+                }
+
+                const data = await response.json();
+                myId = data.id;
+            } catch (error) {
+                console.error('Wystąpił błąd podczas zapytania:', error);
+            }
+
+
+            if (userId && Number(userId) !== Number(myId)) {
+                url += `/${userId}`;
+                const editBtn = document.getElementById("edit-btn");
+                editBtn.classList.add("hidden");
+                const reportBtn = document.getElementById("report-btn");
+                reportBtn.addEventListener('click', async () => {
+                    try {
+                        const response = await authFetch(`/api/Profile/Report/${userId}`, { method: 'PATCH' });
+                        if (response.status === 409) {
+                            showToast("Nie możesz zgłosić sam siebie.");
+                        } else if (response.status === 429) {
+                            showToast("Już zgłosiłeś tego użytkownika");
+                        }
+                        if (!response.ok) return;
+                        showToast("Pomyślnie zgłoszono profil użytkownika");
+                    } catch (e) { console.error(e); }
+                });
+                friendBtn.addEventListener('click', async () => {
+                    try {
+                        const response = await authFetch(`/api/Friendships/add-by-id/${userId}`, { method: 'POST' });
+                        if (response.status === 409) showToast("Już się zaprosiliście do znajomych");
+                        if (!response.ok) return;
+                        showToast("Pomyślnie dodano do znajomych");
+                    } catch (e) { console.error(e); }
+                });
+
+            } else {
+                const reportBtn = document.getElementById("report-btn");
+                reportBtn.classList.add("hidden");
+                friendBtn.classList.add("hidden");
+            }
+
+            const response = await authFetch(url);
+
+            if (!response.ok) {
+                throw new Error(
+                    'Nie udało się pobrać danych z serwera (Status: ' +
+                    response.status + ')'
+                );
+            }
+
+            const user = await response.json();
+
+            hobbyDiv.innerHTML = "";
+
+            function renderTags(container, list) {
+                container.innerHTML = "";
+                (list || []).forEach(item => {
+                    const tag = document.createElement("span");
+                    tag.className = "tag";
+                    tag.textContent = item;
+                    container.appendChild(tag);
+                });
+            }
+            renderTags(hobbyDiv, user.hobby);
+            renderTags(gamesDiv, user.games);
+            renderTags(booksDiv, user.books);
+            renderTags(foodDiv, user.food);
+            renderTags(musicDiv, user.music);
+            renderTags(favGamesDiv, user.favoriteGames);
+            
+            prefDiv.innerHTML = '';
+
+            ['Szuka: ' + (user.intent || "-"), 'Alkohol: ' + (user.alcohol || "-"), 'Palenie: ' + (user.smoking || "-")].forEach(text => {
+                const row = document.createElement('div');
+                row.className = 'info-row';
+                row.textContent = text;
+                prefDiv.appendChild(row);
+            });
+
+            mainInfo.innerHTML = '';
+
+            const rowsData = [
+                { icon: 'identity_platform', value: user.gender || "-" },
+                { icon: 'diversity_3', value: user.status || "-" }
+            ];
+
+            rowsData.forEach(data => {
+                const row = document.createElement('div');
+                row.className = 'info-row';
+
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'buddy-icon icon-pink';
+                iconSpan.textContent = data.icon;
+
+                const valueSpan = document.createElement('span');
+                valueSpan.textContent = data.value;
+
+                row.appendChild(iconSpan);
+                row.appendChild(valueSpan);
+                mainInfo.appendChild(row);
+            });
+
+            nameElement.textContent = user.userName;
+            descElement.textContent = user.description || "Użytkownik nie dodał żadnego opisu...";
+            tagsElement.textContent = user.tags;
+
+            const objectUrl = await getAvatar(user, 600);
+            avatarDiv.style.backgroundImage = `url(${objectUrl})`;
+
+            avatarDiv.style.cursor = "pointer";
+
+            avatarDiv.addEventListener("click", () => {
+                if (objectUrl) {
+                    openImageInLightbox(objectUrl);
+                }
+            });
+
+        } catch (error) {
+            console.error(error);
+            showToast("Coś poszło nie tak...");
+            avatarDiv.style.backgroundImage = "url('./publicResources/defaultAvatars/domyslne.png')";
+        }
+    }
+
+    function openImageInLightbox(imageSrc) {
+        const lightbox = document.createElement('div');
+        lightbox.className = 'dynamic-lightbox';
+
+        const lightboxImg = document.createElement('img');
+        lightboxImg.src = imageSrc;
+
+        lightbox.appendChild(lightboxImg);
+        document.body.appendChild(lightbox);
+
+        lightbox.onclick = () => {
+            lightbox.remove();
+        };
+    }
+
+    window.onload = loadProfile;
+</script>

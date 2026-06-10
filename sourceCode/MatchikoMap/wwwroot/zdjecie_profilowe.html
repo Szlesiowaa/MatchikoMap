@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/publicResources/favicon.ico">
+    <title>MatchikoMap - Zdjęcia Profilowe</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --panel-bg: #0b0e1a;
+            --accent-purple: #a855f7;
+            --neon-green: #4ade80;
+            --neon-red: #f87171;
+            --border-color: #3d1b46;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            background: radial-gradient(circle at top, #0f172a, #020617);
+            color: #e5e7eb;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.25);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            transition: 0.3s ease;
+        }
+
+            .panel:hover {
+                box-shadow: 0 0 40px rgba(180, 34, 238, 0.35);
+            }
+
+        h2 {
+            margin-top: 0;
+            color: var(--accent-purple);
+            font-size: 18px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #6a1d9e;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--accent-purple);
+            text-decoration: none;
+            font-size: 12px;
+            border: 1px solid var(--accent-purple);
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+            .nav-back:hover {
+                background: var(--accent-purple);
+                color: white;
+            }
+
+        button {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #1b0720, #6a1d9e);
+            color: white;
+            border: 1px solid #834d9c;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-size: 12px;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+            button:hover {
+                box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+                filter: brightness(1.2);
+            }
+
+        .preview-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+            .avatar-wrapper:hover {
+                transform: scale(1.05);
+            }
+
+        .preview-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: none;
+            display: block;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: 0.3s;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .avatar-wrapper:hover .overlay {
+            opacity: 1;
+        }
+
+        .upload-zone {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: rgba(15, 23, 42, 0.5);
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+            .upload-zone:hover, .upload-zone.dragover {
+                border-color: var(--accent-purple);
+                background: rgba(168, 85, 247, 0.1);
+                box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+            }
+
+        .upload-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .upload-icon {
+            font-size: 40px;
+            color: var(--accent-purple);
+            line-height: 1;
+            margin: 0;
+        }
+
+        #file-name {
+            font-size: 14px;
+            color: #94a3b8;
+            margin: 0;
+            text-align: center;
+        }
+
+        .avatar-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .avatar-item {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 12px;
+            border: 2px solid #552269;
+            cursor: pointer;
+            object-fit: cover;
+            transition: 0.3s ease;
+        }
+
+            .avatar-item:hover {
+                transform: scale(1.1);
+                border-color: var(--accent-purple);
+                box-shadow: 0 0 15px rgba(168, 85, 247, 0.8);
+            }
+
+        .status {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 13px;
+            min-height: 20px;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #lightboxImg {
+            max-width: 90vw;
+            max-height: 90vh;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="profil.html" class="nav-back">← WRÓĆ DO PROFILU</a>
+
+        <div class="panel">
+            <h2>TWOJE AKTUALNE ZDJĘCIE</h2>
+            <div class="preview-container">
+                <div class="avatar-wrapper" onclick="openLightbox()">
+                    <img id="currentAvatar" class="preview-img" src="./publicResources/defaultAvatars/domyslne.png" alt="Avatar">
+                    <div class="overlay">POWIĘKSZ</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+            <img id="lightboxImg" src="" alt="Powiększenie">
+        </div>
+
+        <div class="panel">
+            <h2>PRZEŚLIJ WŁASNE ZDJĘCIE PROFILOWE</h2>
+
+            <div class="upload-zone" id="drop-zone">
+                <div class="upload-content" id="upload-content">
+                    <span class="upload-icon">+</span>
+                    <p id="file-name">Wybierz plik lub przeciągnij go tutaj</p>
+                </div>
+                <img id="image-preview" src="" alt="Podgląd" style="display: none; max-width: 100%; max-height: 180px; border-radius: 8px;">
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            </div>
+
+            <button onclick="uploadFile()" class="upload-btn">ZAPISZ NOWE ZDJĘCIE</button>
+            <p id="status-msg" class="status"></p>
+        </div>
+
+        <div class="panel">
+            <h2>GALERIA GOTOWYCH AWATARÓW</h2>
+            <div class="avatar-gallery">
+                <img src="./publicResources/defaultAvatars/kobieta1.png" class="avatar-item" onclick="setGalleryAvatar(this.src)">
+                <img src="./publicResources/defaultAvatars/kobieta2.png" class="avatar-item" onclick="setGalleryAvatar(this.src)">
+                <img src="./publicResources/defaultAvatars/kobieta3.png" class="avatar-item" onclick="setGalleryAvatar(this.src)">
+                <img src="./publicResources/defaultAvatars/chlopak1.png" class="avatar-item" onclick="setGalleryAvatar(this.src)">
+                <img src="./publicResources/defaultAvatars/chlopak2.png" class="avatar-item" onclick="setGalleryAvatar(this.src)">
+                <img src="./publicResources/defaultAvatars/chlopak3.png" class="avatar-item" onclick="setGalleryAvatar(this.src)">
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/authFetch.js"></script>
+    <script src="./js/avatar.js"></script>
+
+    <script>
+        const API_URL = '/api/ProfilePicture';
+
+        async function uploadFile() {
+            const fileInput = document.getElementById("fileInput");
+            const status = document.getElementById("status-msg");
+        
+            if (!fileInput.files[0]) return alert("Wybierz plik!");
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            try {
+                status.innerText = "Przesyłanie...";
+                status.style.color = "#fbbf24";
+
+                const response = await authFetch(API_URL, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (response.ok) {
+                    status.innerText = "Zdjęcie zaktualizowane!";
+                    status.style.color = "#4ade80";
+                    loadCurrentAvatar(); 
+                } else {
+                    status.innerText = "Wystąpił błąd.";
+                    status.style.color = "#f87171";
+                }
+            } catch (e) {
+                status.innerText = "Wystąpił błąd.";
+                status.style.color = "#f87171";
+                console.error(e);
+            }
+        }
+
+        async function setGalleryAvatar(imageSrc) {
+            const status = document.getElementById("status-msg");
+            try {
+                status.innerText = "Przesyłanie...";
+
+                const response = await fetch(imageSrc);
+                const blob = await response.blob();
+                const file = new File([blob], "avatar.jpg", { type: "image/jpeg" });
+
+                const formData = new FormData();
+                formData.append("file", file);
+                const defaultImageType = imageSrc.split('/').pop();
+                const apiRes = await authFetch(`/api/ProfilePicture?defaultImageType=${defaultImageType}`, {
+                    method: "DELETE",
+                });
+
+                if (apiRes.ok) {
+                    status.innerText = "Zdjęcie zaktualizowane!";
+                    status.style.color = "#4ade80";
+                    document.getElementById("currentAvatar").src = imageSrc;
+                }
+            } catch (e) {
+                status.innerText = "Wystąpił błąd.";
+                status.style.color = "#f87171";
+            }
+        }
+
+        async function loadCurrentAvatar() {
+            try {
+                const response = await authFetch('/api/Profile');
+                if (!response.ok) throw new Error("Błąd pobierania profilu");
+                const user = await response.json();
+                document.getElementById("currentAvatar").src = await getAvatar(user, 600);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('fileInput');
+        const fileNameDisplay = document.getElementById('file-name');
+        const uploadContent = document.getElementById('upload-content');
+        const imagePreview = document.getElementById('image-preview');
+
+        function handlePreview(file) {
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    uploadContent.style.display = 'none';
+                };
+
+                reader.readAsDataURL(file);
+                fileNameDisplay.innerText = "Wybrano: " + file.name;
+            }
+        }
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            handlePreview(e.target.files[0]);
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handlePreview(files[0]);
+            }
+        });
+
+        function openLightbox() {
+            const currentImg = document.getElementById('currentAvatar').src;
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+
+            lightboxImg.src = currentImg;
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        loadCurrentAvatar();
+    </script>
+
+</body>
+</html>

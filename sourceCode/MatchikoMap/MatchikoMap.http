@@ -1,0 +1,140 @@
+@MatchikoMap_HostAddress = https://localhost:7245
+### Wyœwietlenie ca³ej tabeli Users
+GET {{MatchikoMap_HostAddress}}/Debug/All-users
+Accept: application/json
+
+### Kim jestem
+GET {{MatchikoMap_HostAddress}}/Debug/Me
+Authorization: Bearer {{ImmortalToken}}
+Accept: application/json
+
+### Rejestracja nowego u¿ytkownika
+POST {{MatchikoMap_HostAddress}}/api/register
+Content-Type: application/json
+{
+  "email": "mail4@test.com",
+  "username": "user4",
+  "password": "Password.123"
+}
+
+### Logowanie
+POST {{MatchikoMap_HostAddress}}/api/login
+Content-Type: application/json
+{
+  "email": "mail3@test.com",
+  "password": "Password.123"
+}
+
+### Wyœwietlenie lokalizacji wszystkich u¿ytkowników
+GET {{MatchikoMap_HostAddress}}/api/location
+Authorization: Bearer {{ImmortalToken}}
+Accept: application/json
+
+### Zmiana lokalizacji dla u¿ytkownika
+POST {{MatchikoMap_HostAddress}}/api/location
+Authorization: Bearer {{ImmortalToken3}}
+Content-Type: application/json
+{
+  "latitude": 55.855728,
+  "longitude": 14.667551
+}
+
+### Wyœwietlenie listy znajomych u¿ytkownika
+GET {{MatchikoMap_HostAddress}}/api/Friendships/list/1
+Authorization: Bearer {{ImmortalToken}}
+
+### Nawi¹zanie znajomoœci
+POST {{MatchikoMap_HostAddress}}/api/Friendships/add-friend
+Authorization: Bearer {{ImmortalToken}}
+Content-Type: application/json
+{
+  "MyId": 1,
+  "FriendId": 2
+}
+
+### Wyœwietlenie zdjêcia u¿ytkownika
+GET {{MatchikoMap_HostAddress}}/api/ProfilePicture/1?size=original
+Authorization: Bearer {{ImmortalToken}}
+Accept: application/json
+
+### Wyœwietlenie profilu
+GET {{MatchikoMap_HostAddress}}/api/Profile/10
+Authorization: Bearer {{ImmortalToken}}
+Accept: application/json
+
+### Email
+POST {{MatchikoMap_HostAddress}}/Debug/test-email
+
+### Czat 1-2
+GET {{MatchikoMap_HostAddress}}/api/Conversations/15
+Authorization: Bearer {{ImmortalToken}}
+Accept: application/json
+
+### Usuñ znajomego
+DELETE {{MatchikoMap_HostAddress}}/api/Friendships/remove-friend/100
+Authorization: Bearer {{ImmortalToken}}
+Accept: application/json
+
+### SprawdŸ zaproszenia
+GET {{MatchikoMap_HostAddress}}/api/Friendships/Requests/Pending
+Authorization: Bearer {{ImmortalToken1}}
+Accept: application/json
+
+### Akceptuj zaproszenie
+PATCH {{MatchikoMap_HostAddress}}/api/Friendships/Requests/Accept
+Authorization: Bearer {{ImmortalToken}}
+Content-Type: application/json
+
+4
+
+### Szukaj gier
+GET {{MatchikoMap_HostAddress}}/api/SearchBar?query=cs
+Authorization: Bearer {{ImmortalToken}}
+
+### Szukaj konwersacji grupowej
+GET {{MatchikoMap_HostAddress}}/api/Conversations/Group?gameName=Counter-Strike%202
+Authorization: Bearer {{ImmortalToken}}
+
+### Odznacz konwersacje
+GET {{MatchikoMap_HostAddress}}/api/Conversations/Group?gameName=Counter-Strike%202
+Authorization: Bearer {{ImmortalToken}}
+
+### Szukaj ulubionych gier
+GET {{MatchikoMap_HostAddress}}/api/Conversations/Group/Favourite
+Authorization: Bearer {{ImmortalToken}}
+
+### Update ulubionej gry
+PATCH {{MatchikoMap_HostAddress}}/api/Conversations/Group/Favourite?gameName=Counter-Strike%202
+Authorization: Bearer {{ImmortalToken}}
+
+### ---------- MATCHMAKING ----------
+
+### Wyszukaj mnie w zg³oszeniach
+GET {{MatchikoMap_HostAddress}}/api/Matchmaking/Entries/My
+Authorization: Bearer {{ImmortalToken2}}
+
+### ZnajdŸ pobliskie og³oszenia
+GET {{MatchikoMap_HostAddress}}/api/Matchmaking/Entries/List/35
+Authorization: Bearer {{ImmortalToken}}
+
+### Stwórz zg³oszenie
+POST {{MatchikoMap_HostAddress}}/api/Matchmaking/Entries/JoinOrCreate
+Authorization: Bearer {{ImmortalToken3}}
+Content-Type: application/json
+{
+  "GameId": 35,
+  "Description": "<img src=x onerror=\"showToast('hacked')\">",
+  "Type": "Manual"
+}
+
+### Zaakceptuj matchmaking
+PATCH {{MatchikoMap_HostAddress}}/api/Matchmaking/Entries/Accept/10
+Authorization: Bearer {{ImmortalToken}}
+
+### Odrzuæ matchmaking
+DELETE {{MatchikoMap_HostAddress}}/api/Matchmaking/Entries/Reject/25
+Authorization: Bearer {{ImmortalToken2}}
+
+### Do³¹cz do matchmakingu
+PATCH {{MatchikoMap_HostAddress}}/api/Matchmaking/Entries/Join/16
+Authorization: Bearer {{ImmortalToken2}}

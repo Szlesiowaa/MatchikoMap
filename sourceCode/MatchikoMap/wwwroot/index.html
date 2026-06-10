@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html class="dark" lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>MatchikoMap</title>
+    <link rel="icon" type="image/x-icon" href="./publicResources/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #16111b;
+            color: #eadfed;
+            overflow-x: hidden;
+            min-height: 100vh;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tilted-marquee-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 140vw;
+            z-index: -1;
+            pointer-events: none;
+            transform-origin: bottom left;
+            transform: rotate(-8deg) translateY(15%);
+            background: transparent;
+            overflow: hidden;
+            white-space: nowrap;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        @keyframes marquee-scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-33.33%);
+            }
+        }
+
+        @keyframes marquee-scroll-reverse {
+            0% {
+                transform: translateX(-33.33%);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .marquee-content-row {
+            display: flex;
+            width: max-content;
+            animation: marquee-scroll 60s linear infinite;
+        }
+
+        .marquee-icon-item {
+            width: clamp(70px, 12vh, 220px);
+            height: clamp(70px, 12vh, 220px);
+            margin: 0 clamp(40px, 6vh, 120px);
+            opacity: 0.08;
+            filter: drop-shadow(0 0 15px #a855f7);
+            flex-shrink: 0;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .auth-input {
+            background: #1f1a23 !important;
+            border: 1px solid rgba(168, 85, 247, 0.3) !important;
+            color: #eadfed !important;
+            padding: 12px 16px;
+            border-radius: 0.75rem !important;
+            width: 100%;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+            .auth-input:focus {
+                border-color: #a855f7 !important;
+                outline: none !important;
+                box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.5) !important;
+            }
+
+        .view-visible {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 500ms ease-out, transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: auto;
+            position: relative;
+            visibility: visible !important;
+        }
+
+        .view-hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+            transition: opacity 500ms ease-in, transform 500ms ease-in;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            visibility: hidden;
+        }
+
+        .page-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+    <link rel="stylesheet" href="./css/startPage.css">
+    <div class="tilted-marquee-container">
+        <div class="marquee-content-row py-12" style="bottom: -300px;">
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+        </div>
+        <div class="marquee-content-row py-12" style="bottom: -150px; animation: marquee-scroll-reverse 60s linear infinite;">
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+        </div>
+        <div class="marquee-content-row py-12">
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+        </div>
+        <div class="marquee-content-row py-12" style="bottom: 150px; animation: marquee-scroll-reverse 60s linear infinite;">
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+        </div>
+        <div class="marquee-content-row py-12" style="bottom: 300px;">
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+        </div>
+        <div class="marquee-content-row py-12" style="bottom: 450px; animation: marquee-scroll-reverse 60s linear infinite;">
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+        </div>
+        <div class="marquee-content-row py-12" style="bottom: 600px;">
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-1.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-2.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-3.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-4.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-5.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-6.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-7.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-8.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-9.png" />
+            <img alt="Icon" class="marquee-icon-item" src="./publicResources/start-img-10.png" />
+        </div>
+    </div>
+
+    <header class="auth-card fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4 flex justify-between items-center w-full">
+
+            <div class="text-l md:text-headline-md tracking-tighter text-brand-purple font-orbitron font-bold cursor-pointer leading-none"
+                 onclick="showLanding()">
+                MatchikoMap
+            </div>
+
+            <nav class="flex gap-3 md:gap-8 items-center flex-wrap justify-end">
+                <a class="text-xs md:text-label-sm text-outline hover:text-on-surface transition-colors uppercase tracking-wider font-orbitron"
+                   href="./regulamin.html">
+                    REGULAMIN
+                </a>
+            </nav>
+
+        </div>
+    </header>
+
+    <div class="page-container min-h-screen">
+        <main class="view-visible" id="landing-page">
+
+            <section class="min-h-screen flex items-center pt-40 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">
+                    <div class="order-1 md:order-1 flex justify-center md:justify-start w-full">
+                        <div class="flex flex-col items-center w-full max-w-[500px]">
+                            <div class="relative w-full flex items-center justify-center bg-[#16111b] p-6 rounded-2xl shadow-xl">
+                                <img alt="MatchikoMap Rectangular Logo" class="w-auto max-h-[250px] md:max-h-none md:w-[80%] object-contain relative z-10" src="./publicResources/logo.png">
+                            </div>
+                            <h2 class="font-orbitron text-2xl md:text-4xl font-bold text-brand-purple leading-tight text-center mt-6 md:mt-16 tracking-wide">
+                                MatchikoMap
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="order-2 md:order-2 space-y-6 md:space-y-8 text-center md:text-left mt-8 md:mt-0">
+                        <h1 class="font-orbitron text-3xl md:text-display-xl text-brand-purple leading-tight">
+                            Koniec z graniem solo
+                        </h1>
+                        <p class="orbitron font-body-lg text-base md:text-body-lg text-on-surface-variant max-w-xl mx-auto md:mx-0">
+                            Wejdź i dołącz już teraz, szukaj znajomych na mapie i ciesz się wspólnym graniem.
+                        </p>
+                        <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-4 pt-4">
+                            <button class="bg-brand-purple text-on-primary w-full sm:w-auto px-10 py-4 rounded-xl font-bold orbitron tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] uppercase" onclick="showAuth('register')">
+                                ROZPOCZNIJMY
+                            </button>
+                            <button class="border-2 border-brand-purple text-brand-purple bg-transparent w-full sm:w-auto px-10 py-4 rounded-xl font-bold orbitron tracking-widest hover:scale-105 active:scale-95 transition-all uppercase" onclick="showAuth('login')">
+                                MAM JUŻ KONTO
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="py-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+                    <div class="glass-card p-10 rounded-3xl space-y-6 hover:border-brand-purple/50 transition-colors">
+                        <span class="material-symbols-outlined text-brand-purple text-5xl">forum</span>
+                        <h3 class="orbitron text-2xl font-bold">Czatuj</h3>
+                        <p class="orbitron text-on-surface-variant">... z osobami podobnymi zainteresowaniami do Ciebie.</p>
+                    </div>
+                    <div class="glass-card p-10 rounded-3xl space-y-6 hover:border-brand-purple/50 transition-colors">
+                        <span class="material-symbols-outlined text-brand-purple text-5xl">sports_esports</span>
+                        <h3 class="orbitron text-2xl font-bold">Gracze to my</h3>
+                        <p class="orbitron text-on-surface-variant">Stwórzmy razem lokalną społeczność graczy.</p>
+                    </div>
+                    <div class="glass-card p-10 rounded-3xl space-y-6 hover:border-brand-purple/50 transition-colors">
+                        <span class="material-symbols-outlined text-brand-purple text-5xl">group</span>
+                        <h3 class="orbitron text-2xl font-bold">Spotkaj się w realu</h3>
+                        <p class="orbitron text-on-surface-variant">Poszerz grono swoich znajomych o nowe wartościowe osoby.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <section class="min-h-screen pt-40 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto z-10 view-hidden" id="auth-page">
+            <div class="text-center mb-12">
+                <h2 class="orbitron text-4xl md:text-5xl font-bold text-white tracking-widest uppercase">MATCHIKOMAP</h2>
+                <p class="orbitron text-brand-purple text-sm md:text-base mt-2 tracking-widest uppercase">Twoja mapa jest pełna graczy. Czas ich poznać!</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start max-w-5xl mx-auto">
+
+                <div class="auth-card p-8 rounded-3xl space-y-6 border-brand-purple/20 border-brand-purple/60 backdrop-blur-2xl" id="register-container">
+                    <div class="flex items-center gap-3 mb-6">
+                        <h3 class="orbitron text-2xl font-bold text-white uppercase tracking-wider drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">REJESTRACJA</h3>
+                    </div>
+                    <form class="space-y-4" onsubmit="return false">
+                        <input id="reg-username" class="auth-input" placeholder="Nazwa użytkownika" type="text">
+                        <input id="reg-email" class="auth-input" placeholder="Email" type="email">
+                        <input id="reg-pass" class="auth-input" placeholder="Hasło" type="password">
+                        <p class="text-[12px] text-brand-purple/80 orbitron px-1">Hasło: min. 8 znaków, duża litera i cyfra</p>
+                        <input id="reg-pass2" class="auth-input" placeholder="Powtórz hasło" type="password">
+                        <div class="flex items-center gap-3 px-1 mt-3">
+                            <div class="relative flex items-center justify-center h-5">
+                                <input id="termsCheckbox" type="checkbox"
+                                       class="peer appearance-none w-5 h-5 border border-brand-purple/60 rounded bg-[#110c15]
+                      checked:bg-brand-purple/80 transition-all cursor-pointer
+                      focus:outline-none focus:ring-0 focus-visible:outline-none">
+
+                                <svg class="absolute w-3.5 h-3.5 pointer-events-none hidden peer-checked:block text-white"
+                                     fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+
+                            <label for="terms" class="text-[11px] orbitron text-white/70 cursor-pointer select-none flex items-center pt-[1px]">
+                                Zapoznałem się i akceptuję&nbsp;
+                                <a href="/regulamin.html" class="text-brand-purple hover:text-brand-purple/100 underline decoration-brand-purple/30 transition-colors">
+                                    Regulamin
+                                </a>
+                                &nbsp;serwisu
+                            </label>
+                        </div>
+                        <button id="registerBtn" class="w-full bg-gradient-to-br from-[#1b0720] to-[#6a1d9e] text-white p-[14px] border border-[#834d9c] rounded-[8px] font-[800] orbitron uppercase tracking-[1px] mt-[10px] transition-all duration-300 hover:brightness-110 hover:shadow-[0_0_20px_rgba(168,85,247,0.6)]" type="submit">
+                            STWÓRZ KONTO
+                        </button>
+                    </form>
+                </div>
+
+                <div class="auth-card p-8 rounded-3xl space-y-6 border-brand-purple/20 border-brand-purple/60 backdrop-blur-2xl" id="login-container">
+
+                    <div class="flex items-center gap-3 mb-6">
+                        <h3 class="orbitron text-2xl font-bold text-white uppercase tracking-wider drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">LOGOWANIE</h3>
+                    </div>
+                    <form class="space-y-4" onsubmit="return false">
+                        <input id="login-email" class="auth-input" placeholder="Twój Email" type="email">
+                        <input id="login-pass" class="auth-input" placeholder="Twoje Hasło" type="password">
+                        <div class="pt-4 space-y-3">
+                            <button id="loginBtn" class="w-full bg-gradient-to-br from-[#020617] to-[#4f46e5] text-white p-[14px] border border-[#4f46e5] rounded-[8px] font-extrabold orbitron uppercase tracking-[1px] mt-[10px] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_#4f46e5] hover:brightness-[1.2]" type="submit">
+                                ZALOGUJ SIĘ
+                            </button>
+                            <button id="login-google" class="flex items-center justify-center gap-2 w-full bg-gradient-to-br from-[#020617] to-[#4f46e5] text-white p-[14px] border border-[#4f46e5] rounded-[8px] font-extrabold orbitron uppercase tracking-[1px] mt-[10px] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_#4f46e5] hover:brightness-[1.2]" type="submit">
+                                <svg height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#fff"></path>
+                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#fff"></path>
+                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#fff"></path>
+                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#fff"></path>
+                                </svg>
+                                <span>ZALOGUJ SIĘ ZA POMOCĄ GOOGLE</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="mt-12 text-center">
+                <button class="text-outline hover:text-brand-purple transition-colors font-bold orbitron tracking-widest uppercase flex items-center justify-center gap-2 mx-auto" onclick="showLanding()">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    POWRÓT DO STRONY GŁÓWNEJ
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <footer class="w-full pt-16 pb-40 md:pb-16 px-margin-mobile md:px-margin-desktop bg-surface-container-lowest border-t border-white/5 relative z-20">
+        <div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-gutter w-full">
+            <div class="flex flex-col items-center md:items-start gap-4">
+                <div class="text-headline-md text-brand-purple orbitron font-bold">MatchikoMap</div>
+                <p class="font-label-sm text-label-sm text-sm orbitron">© 2026 Zespół MatchikoMap</p>
+            </div>
+            <section class="py-12 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center relative z-10">
+                <p class="orbitron text-on-surface-variant/50 text-sm tracking-wide">
+                    Projekt stworzony w ramach przedmiotu Programowanie Zespołowe | Zespół nr 11
+                </p>
+            </section>
+        </div>
+    </footer>
+
+    <link rel="stylesheet" href="/css/toast.css">
+    <script src="/js/toast.js"></script>
+    <script>
+        function showAuth(type) {
+            const landing = document.getElementById('landing-page');
+            const auth = document.getElementById('auth-page');
+
+            landing.classList.replace('view-visible', 'view-hidden');
+            auth.classList.replace('view-hidden', 'view-visible');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showLanding() {
+            const landing = document.getElementById('landing-page');
+            const auth = document.getElementById('auth-page');
+
+            auth.classList.replace('view-visible', 'view-hidden');
+            landing.classList.replace('view-hidden', 'view-visible');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+        document.getElementById("registerBtn").addEventListener("click", async () => {
+            const username = document.getElementById("reg-username").value;
+            const email = document.getElementById("reg-email").value;
+            const pass = document.getElementById("reg-pass").value;
+            const pass2 = document.getElementById("reg-pass2").value;
+            const terms = document.getElementById("termsCheckbox");
+
+            if (pass !== pass2) { showToast("Hasła nie są identyczne."); return; }
+            if (!terms.checked) { showToast("Aby utworzyć konto musisz zaakceptować regulamin."); return; }
+
+            try {
+                const res = await fetch("/api/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+
+                    body: JSON.stringify({
+                        email: email,
+                        userName: username,
+                        password: pass
+                    })
+                });
+
+                if (res.ok) showToast("Konto zostało utworzone! Sprawdź maila i kliknij w link, aby go zweryfikować.");
+                else showToast("Błąd rejestracji. Spróbuj ponownie.");
+            } catch (err) {
+                showToast("Coś poszło nie tak. Spróbuj jeszcze raz.")
+            }
+        });
+
+        document.getElementById("loginBtn").addEventListener("click", async () => {
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-pass").value;
+
+            try {
+                const res = await fetch("/api/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const data = await res.json();
+
+                if (res.status === 401 && data.emailConfirmed === false) {
+                    showToast(data.message || "Sprawdź maila i potwierdź konto.");
+                    return;
+                }
+
+                if (!res.ok) {
+                    showToast("Błędne dane logowania lub inny błąd.");
+                    return;
+                }
+
+                window.location.href = "mapa.html";
+
+            } catch (err) { }
+        });
+        document.getElementById("login-google").addEventListener("click", () => {
+            window.location.href = "/api/google-redirection";
+        });
+    </script>
+
+
+</body></html>

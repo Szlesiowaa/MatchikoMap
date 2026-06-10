@@ -55,3 +55,11 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+
+sourceCode/FindYourBuddy/obj/
+sourceCode/FindYourBuddy/bin/
+sourceCode/.vs/
+sourceCode/MatchikoMap/Migrations/*
+*.user
+*.suo

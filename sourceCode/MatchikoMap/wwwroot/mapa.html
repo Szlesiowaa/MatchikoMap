@@ -1,0 +1,5075 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/publicResources/favicon.ico">
+    <title>MatchikoMap</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.10/signalr.min.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --panel-bg: #0f172a;
+            --accent-purple: #a855f7;
+            --neon-green: #4ade80;
+            --neon-red: #f87171;
+            --neon-blue: #3d45b3;
+            --border-color: #3d1b46;
+            --primary: #592591;
+            --primary-glow: #a855f7;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: 'Orbitron', sans-serif;
+            background: var(--bg-dark);
+            overflow: hidden;
+        }
+
+        #app-wrapper {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .top-nav {
+            height: 60px;
+            background: #1b0720;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            width: calc(100vw - 350px) !important;
+            box-sizing: border-box !important;
+        }
+
+        /*
+        .top-nav {
+            height: 60px;
+            background: #1b0720;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+        */
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .right-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            flex-grow: 1;
+            justify-content: flex-end;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--accent-purple);
+            color: white;
+            font-family: 'Orbitron';
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            transition: 0.3s;
+            white-space: nowrap;
+            min-width: 140px;
+            height: 38px;
+        }
+
+            .nav-btn:hover {
+                background: var(--accent-purple);
+                color: #000;
+            }
+
+        .logout-btn {
+            margin-left: auto;
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+            .logout-btn:hover {
+                background: var(--neon-red);
+                color: #000;
+                box-shadow: 0 0 10px var(--neon-red);
+            }
+
+        #map {
+            flex: 1;
+            width: 100%;
+        }
+
+        #right-sidebar {
+            width: 350px;
+            background: #0b0e1a;
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1e1b4b;
+            color: var(--accent-purple);
+            font-weight: 800;
+            letter-spacing: 2px;
+            border-bottom: 1px solid var(--accent-purple);
+        }
+
+        .friend-info {
+            flex: 1;
+            min-width: 0;
+            cursor: pointer;
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .conversation-card {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            .conversation-card:hover {
+                border-color: var(--accent-purple);
+                background: rgba(168, 85, 247, 0.1);
+            }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-right: 12px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+            .avatar:hover {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+
+        .card-last-message {
+            font-size: 10px;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            width: 100%;
+        }
+
+        .del-btn {
+            background: none;
+            border: none;
+            color: var(--accent-purple);
+            cursor: pointer;
+            font-size: 16px;
+            opacity: 0.3;
+            transition: 0.3s;
+        }
+
+        .conversation-card:hover .del-btn {
+            opacity: 1;
+        }
+
+        .chat-box {
+            position: absolute;
+            top: 90px;
+            bottom: 30px;
+            left: 30px;
+            width: 600px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--accent-purple);
+            border-radius: 16px;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(90deg, #7e22ce 0%, var(--accent-purple) 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        #chatTitle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        }
+
+            #chatTitle::before {
+                content: "";
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: var(--status-color, var(--accent-purple));
+                box-shadow: 0 0 12px var(--status-color, var(--accent-purple));
+                transition: all 0.4s ease;
+                animation: pulse-status 2s infinite ease-in-out;
+            }
+
+        @keyframes pulse-status {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .back-btn,
+        .close-chat-btn {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            color: white !important;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+            .close-chat-btn:hover {
+                background: var(--neon-red) !important;
+                box-shadow: 0 0 10px var(--neon-red);
+                transform: scale(1.1);
+            }
+
+            .back-btn:hover {
+                background: var(--neon-blue) !important;
+                box-shadow: 0 0 10px var(--neon-blue);
+            }
+
+        #messages {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-footer {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            background: #0b0e1a;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .typing-status-container {
+            height: 14px;
+        }
+
+        #userTypingLabel {
+            font-size: 10px;
+            color: var(--accent-purple);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .chat-input-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #020617;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 10px;
+            gap: 8px;
+            position: relative;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+            .chat-input-bar:focus-within {
+                border-color: var(--accent-purple);
+                box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+            }
+
+        .chat-message-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 8px 4px;
+            outline: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 16px;
+        }
+
+            .btn-icon:hover {
+                color: var(--accent-purple);
+                background: rgba(168, 85, 247, 0.1);
+            }
+
+            .btn-icon .material-symbols-outlined {
+                font-size: 20px;
+            }
+
+            .btn-icon.has-file {
+                color: var(--accent-purple);
+                background: rgba(168, 85, 247, 0.15);
+                box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+            }
+
+        .emoji-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .emoji-picker {
+            position: absolute;
+            bottom: 40px;
+            right: 0;
+            background: #0f172a;
+            border: 1px solid var(--accent-purple);
+            border-radius: 8px;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            z-index: 3000;
+            box-shadow: 0 0 15px var(--accent-purple);
+        }
+
+            .emoji-picker.hidden {
+                display: none;
+            }
+
+            .emoji-picker span {
+                cursor: pointer;
+                font-size: 20px;
+                transition: transform 0.2s;
+                text-align: center;
+            }
+
+                .emoji-picker span:hover {
+                    transform: scale(1.3);
+                }
+
+        .btn-send {
+            background: var(--accent-purple) !important;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 900;
+            border-radius: 4px;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px var(--accent-purple);
+        }
+
+            .btn-send:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 0 18px var(--accent-purple);
+            }
+
+            .btn-send:active {
+                transform: translateY(1px);
+            }
+
+        .file-status-row {
+            padding-left: 4px;
+        }
+
+        #messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #messages::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        #messages::-webkit-scrollbar-thumb {
+            background: var(--accent-purple);
+            border-radius: 10px;
+        }
+        .user-marker {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-purple);
+            background-size: cover;
+            box-shadow: 0 0 10px var(--accent-purple);
+        }
+
+        .add-friend-panel {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(30, 27, 75, 0.4);
+        }
+
+        .add-friend-title {
+            font-size: 11px;
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .add-friend-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            width: 100%;
+        }
+
+            .add-friend-group button {
+                flex-shrink: 0;
+                width: 40px !important;
+                height: 40px !important;
+                padding: 0 !important;
+                background: transparent !important;
+                border: 1px solid var(--accent-purple) !important;
+                color: var(--accent-purple) !important;
+                border-radius: 8px !important;
+                font-family: 'Orbitron';
+                font-weight: 800;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+            }
+
+                .add-friend-group button:hover {
+                    background: var(--accent-purple) !important;
+                    color: #020617 !important;
+                    box-shadow: 0 0 10px var(--accent-purple);
+                }
+
+            .add-friend-group input {
+                flex: 1;
+                min-width: 0;
+            }
+
+        .add-friend-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 8px var(--accent-purple);
+        }
+
+        #addFriendStatus {
+            font-size: 9px;
+            margin-top: 5px;
+            min-height: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        #friendSearchInput {
+            flex: 1;
+            background: #020617 !important;
+            border: 1px solid var(--accent-purple) !important;
+            color: white !important;
+            padding: 10px !important;
+            font-family: 'Orbitron', sans-serif !important;
+            font-size: 11px !important;
+            border-radius: 8px !important;
+            height: 40px !important;
+            box-sizing: border-box !important;
+            outline: none;
+        }
+
+        #auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.4s ease;
+        }
+
+            #auth-overlay.fade-out {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+        .logo {
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            color: var(--accent-purple);
+            font-weight: 900;
+            animation: pulse 1.5s infinite ease-in-out;
+            text-align: center;
+            max-width: 90vw;
+            word-wrap: break-word;
+            display: block;
+            margin: 0 auto;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+        }
+
+        .pending-toggle-btn {
+            margin-left: auto;
+            margin-right: 16px;
+        }
+
+        #pendingDropdown {
+            background: rgba(30, 27, 75, 0.95);
+            border-bottom: 1px solid var(--accent-purple);
+            max-height: 200px;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+            #pendingDropdown.hidden {
+                display: none;
+            }
+
+        .pending-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .pending-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .pending-actions button {
+            background: transparent;
+            border: 1px solid var(--accent-purple);
+            color: #fff;
+            font-family: 'Orbitron';
+            font-size: 9px;
+            padding: 3px 7px;
+            margin-left: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: 0.2s;
+        }
+
+            .pending-actions button:hover {
+                background: var(--accent-purple);
+            }
+
+            .pending-actions button.reject {
+                border-color: var(--neon-red);
+                color: var(--neon-red);
+            }
+
+                .pending-actions button.reject:hover {
+                    background: var(--neon-red);
+                    color: #fff;
+                }
+
+        .msg-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 8px;
+            max-width: 85%;
+        }
+
+        .msg-actions {
+            display: none;
+            position: absolute;
+            top: -18px;
+            background: #1e1b4b;
+            border: 1px solid var(--accent-purple);
+            border-radius: 4px;
+            padding: 2px 6px;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .msg-wrapper:hover .msg-actions {
+            display: flex;
+        }
+
+        .action-btn {
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+            .action-btn:hover {
+                transform: scale(1.2);
+            }
+
+        .dynamic-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            cursor: zoom-out;
+        }
+
+            .dynamic-lightbox img {
+                max-width: 90vw;
+                max-height: 90vh;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+                border-radius: 8px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                cursor: default;
+            }
+
+        .search-container {
+            position: relative;
+            width: 350px;
+            margin: 0 15px;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        #gameSearch {
+            width: 100%;
+            height: 38px;
+            background: #1a0b22;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            color: #ffffff;
+            padding: 0 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+            font-family: 'Orbitron';
+        }
+
+            #gameSearch:focus {
+                border-color: #a855f7;
+                background: #221429;
+                box-shadow: 0 0 15px rgba(147, 51, 234, 0.2);
+            }
+
+            #gameSearch::placeholder {
+                color: #9ca3af;
+            }
+
+        .results-list {
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 0;
+            width: 420px;
+            max-height: 80vh;
+            overflow-y: auto;
+            background: #160d1b;
+            border: 1px solid #a855f7;
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+            list-style: none;
+            margin: 0;
+        }
+
+        .search-placeholder-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+            text-align: center;
+            padding: 20px;
+        }
+
+            .search-placeholder-container p {
+                color: #ffffff;
+                font-size: 16px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                opacity: 0.8;
+                text-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+                margin: 0;
+                font-family: 'Orbitron';
+            }
+
+        .results-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .results-list::-webkit-scrollbar-track {
+            background: transparent;
+            margin: 10px 0;
+        }
+
+        .results-list::-webkit-scrollbar-thumb {
+            background: #a855f7;
+            border-radius: 10px;
+        }
+
+        .results-list li {
+            margin-bottom: 8px;
+            list-style: none;
+        }
+
+            .results-list li button {
+                width: 100%;
+                aspect-ratio: 920 / 430;
+                display: flex;
+                align-items: center;
+                border: none;
+                border-radius: 10px;
+                overflow: hidden;
+                position: relative;
+                cursor: pointer;
+                padding: 0 20px;
+                background-color: #110714;
+                margin-bottom: 12px;
+            }
+
+            .results-list li:last-child button {
+                margin-bottom: 0;
+            }
+
+            .results-list li button .bg-overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(90deg, rgba(17, 7, 20, 0.9) 30%, rgba(17, 7, 20, 0.4) 100%);
+                z-index: 1;
+            }
+
+            .results-list li button .content {
+                position: relative;
+                z-index: 2;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                transition: opacity 0.3s ease;
+            }
+
+            .results-list li button img {
+                width: 52px;
+                height: 52px;
+                border-radius: 10px;
+                object-fit: cover;
+                border: none !important;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+            }
+
+            .results-list li button .game-name {
+                color: #ffffff;
+                font-size: 17px;
+                font-weight: 800;
+                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                font-family: 'Orbitron';
+            }
+
+            .results-list li:hover .content {
+                opacity: 0;
+            }
+
+            .results-list li button:hover .bg-overlay {
+                background: linear-gradient(90deg, rgba(168, 85, 247, 0.4) 0%, rgba(17, 7, 20, 0.2) 100%);
+            }
+
+        .custom-cluster {
+            background: transparent;
+            border: none;
+        }
+
+        .cluster-marker {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron';
+            font-size: 13px;
+            color: white;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 0 10px var(--accent-purple);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            .cluster-marker:hover {
+                background: var(--accent-purple);
+                box-shadow: 0 0 15px var(--accent-purple);
+            }
+
+        .circle {
+            border-radius: 50%;
+        }
+
+        .square {
+            border-radius: 0;
+        }
+
+        .marker-cluster-small, .marker-cluster-medium, .marker-cluster-large {
+            background: transparent !important;
+        }
+
+        .marker-cluster div {
+            background: transparent !important;
+        }
+
+        .searchbar-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(8px);
+            background: rgba(10, 4, 14, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 4000;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .searchbar-menu {
+            min-width: 65%;
+            height: 65%;
+            display: flex;
+            background: #110714;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            color: #f3f4f6;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(147, 51, 234, 0.15);
+        }
+
+            .searchbar-menu.no-art {
+                min-width: 45%;
+            }
+
+        .searchbar-menu-art {
+            aspect-ratio: 2/3;
+            background-size: cover;
+            background-position: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .searchbar-menu-content {
+            flex: 1;
+            padding: 30px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sb-nav-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #sbMenuCloseButton,
+        #sbBackButton {
+            position: static;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9ca3af;
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+            #sbMenuCloseButton:hover {
+                background: rgba(239, 68, 68, 0.2);
+                border-color: #ef4444;
+                color: #ef4444;
+            }
+
+            #sbBackButton:hover {
+                background: var(--neon-blue);
+                border-color: #ef4444;
+                color: #ef4444;
+            }
+
+        #sbViewContainer {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #sbMainMenuTitle {
+            font-family: 'Orbitron';
+            font-size: 36px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #e5e7eb;
+        }
+
+        #sbMainMenuView {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+            #sbMainMenuView button {
+                width: 100%;
+                padding: 16px 24px;
+                font-size: 16px;
+                font-weight: 500;
+                color: #e5e7eb;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 10px;
+                cursor: pointer;
+                text-align: center;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                height: auto;
+                white-space: normal;
+            }
+
+                #sbMainMenuView button:hover {
+                    background: rgba(147, 51, 234, 0.1);
+                    border-color: #a855f7;
+                    color: #fff;
+                    box-shadow: 0 0 15px rgba(147, 51, 234, 0.2);
+                    transform: translateY(-1px);
+                }
+
+                #sbMainMenuView button:active {
+                    transform: translateY(1px);
+                }
+
+        #sbEntriesListView {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #sbEntryCreatorView {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 10px 20px;
+        }
+
+        #sbEntryCreatorHeader {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 14px;
+            margin-bottom: 5px;
+        }
+
+        #sbEntryCreatorGameIcon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.3);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex-shrink: 0;
+        }
+
+        #sbEntryCreatorGameName {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+
+        .sb-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sb-form-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #9ca3af;
+        }
+
+        #sbEntriesList {
+            overflow-y: auto;
+            flex: 1;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            padding-top: 6px;
+            padding-bottom: 6px;
+        }
+
+        #sbEntriesEmptyMessage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            padding: 20px;
+            pointer-events: none;
+            user-select: none;
+        }
+
+            #sbEntriesEmptyMessage.hidden {
+                display: none !important;
+            }
+
+        #sbEntryCreatorIcon {
+            width: 56px;
+            height: 56px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #sbEntryCreatorDescription {
+            width: 100%;
+            height: 120px;
+            resize: none;
+            padding: 14px;
+            font-size: 15px;
+            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #f3f4f6;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+
+            #sbEntryCreatorDescription:focus {
+                border-color: #a855f7;
+                background: rgba(0, 0, 0, 0.35);
+                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 10px rgba(147, 51, 234, 0.1);
+            }
+
+        #sbEntryCreatorButtons {
+            display: flex;
+            gap: 16px;
+            margin-top: 5px;
+        }
+
+            #sbEntryCreatorButtons button {
+                flex: 1;
+                height: auto;
+                padding: 14px 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+                #sbEntryCreatorButtons button span {
+                    font-size: 16px;
+                    font-weight: 700;
+                }
+
+                #sbEntryCreatorButtons button small {
+                    font-size: 11px;
+                    opacity: 0.6;
+                    font-weight: 400;
+                }
+
+
+        #sbEntryCreatorAutoButton {
+            background: #a855f7;
+            border: 1px solid transparent;
+            color: white;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
+        }
+
+            #sbEntryCreatorAutoButton:hover {
+                background: #9333ea;
+                box-shadow: 0 6px 20px rgba(147, 51, 234, 0.4);
+                transform: translateY(-2px);
+            }
+
+        #sbEntryCreatorManualButton {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e5e7eb;
+        }
+
+            #sbEntryCreatorManualButton:hover {
+                background: rgba(255, 255, 255, 0.06);
+                border-color: rgba(255, 255, 255, 0.3);
+                color: #fff;
+                transform: translateY(-2px);
+            }
+
+        #sbEntryCreatorButtons button:active {
+            transform: translateY(1px);
+        }
+
+        .mm-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(147, 51, 234, 0.08);
+            padding: 2px 16px 2px 4px;
+            border-radius: 8px;
+            margin-left: 30px;
+            height: 38px;
+            box-sizing: border-box;
+        }
+
+        .mm-btn {
+            height: 30px;
+            padding: 0 12px;
+            border-radius: 6px;
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            color: #c084fc;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+            .mm-btn:hover {
+                background: #a855f7;
+                color: #fff;
+                border-color: #c084fc;
+                box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+                transform: translateY(-1px);
+            }
+
+        #navMMTimer {
+            font-family: 'Orbitron';
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+            min-width: 45px;
+            letter-spacing: 0.5px;
+        }
+
+        #navMMStateText {
+            font-size: 12px;
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        .mm-btn-icon {
+            width: 12px;
+            height: 12px;
+            filter: brightness(0) invert(1);
+        }
+
+        .mmOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+            .mmOverlay.hidden {
+                display: none;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+        .mmWindow {
+            width: 440px;
+            background: #110714;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(147, 51, 234, 0.15);
+            color: #fff;
+            text-align: left;
+            position: relative;
+            z-index: 10001;
+        }
+
+        .mmGameHeader {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .mmGameIcon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+        }
+
+        .mmGameName {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #a855f7;
+            letter-spacing: 1px;
+        }
+
+        .mmUserSection {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .mmWindowProfileImage {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.2);
+        }
+
+        .mmWindowUserName {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .mmWindowShowProfileButton {
+            background: transparent !important;
+            border: none !important;
+            color: #a855f7 !important;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 0;
+            text-decoration: underline;
+            text-align: left;
+        }
+
+        .mmDescriptionContainer {
+            margin-bottom: 30px;
+        }
+
+        .mmDescriptionLabel {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #9ca3af;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .mmWindowDescription {
+            width: 100%;
+            background: transparent;
+            border-left: 2px solid rgba(168, 85, 247, 0.3);
+            padding: 4px 0 4px 16px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #d1d5db;
+            min-height: auto;
+        }
+
+        .mmWindowButtons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .mmWindowButton {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.25s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            color: #9ca3af;
+        }
+
+            .mmWindowButton span {
+                font-size: 15px;
+                font-weight: 700;
+            }
+
+            .mmWindowButton small {
+                font-size: 10px;
+                opacity: 0.6;
+            }
+
+        .mmWindowAcceptButton:hover {
+            background: #10b981;
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .mmWindowRejectButton:hover {
+            background: #ef4444;
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .entry-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+            .entry-card:hover {
+                background: rgba(255, 255, 255, 0.04);
+                border-color: rgba(168, 85, 247, 0.4);
+                box-shadow: 0 4px 20px rgba(147, 51, 234, 0.08);
+                transform: translateY(-1px);
+            }
+
+        .entry-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: -4px;
+        }
+
+        .entry-game-tag {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #a855f7;
+            background: rgba(147, 51, 234, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .entry-expiry {
+            font-size: 12px;
+            color: #a855f7;
+            font-weight: 500;
+            background: rgba(147, 51, 234, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 10px;
+            margin-top: 4px;
+        }
+
+        .entry-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .entry-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #110714;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-clip: padding-box;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .entry-user-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .entry-user {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-btn {
+            background: transparent;
+            border: none;
+            color: #a855f7;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0;
+            text-align: left;
+            transition: color 0.2s;
+        }
+
+            .profile-btn:hover {
+                color: #c084fc;
+                text-decoration: underline;
+            }
+
+        .entry-description {
+            color: #d1d5db;
+            font-size: 14.5px;
+            line-height: 1.5;
+            overflow: hidden;
+            white-space: pre-line;
+            overflow-wrap: break-word;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            max-height: 43.5px;
+            transition: max-height 0.3s ease;
+        }
+
+            .entry-description.expanded {
+                display: block;
+                max-height: 1000px;
+                white-space: pre-wrap;
+            }
+
+        .entry-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            min-height: 38px;
+        }
+
+        .footer-left {
+            flex: 1;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .footer-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .expand-btn {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 4px 0;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+            .expand-btn:hover {
+                color: #fff;
+                text-decoration: underline;
+            }
+
+        .join-btn {
+            background: #a855f7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 18px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(147, 51, 234, 0.2);
+        }
+
+            .join-btn:hover {
+                background: #9333ea;
+                box-shadow: 0 0 12px rgba(147, 51, 234, 0.4);
+                transform: scale(1.03);
+            }
+
+            .join-btn:active {
+                transform: scale(0.98);
+            }
+
+        .search-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5000;
+        }
+
+            .search-modal.hidden {
+                display: none;
+            }
+
+        .search-box {
+            width: 650px;
+            max-height: 85vh;
+            overflow-y: auto;
+            background: #0d091a;
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(168, 85, 247, 0.25);
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-purple) transparent;
+        }
+
+            .search-box::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .search-box::-webkit-scrollbar-thumb {
+                background: var(--accent-purple);
+                border-radius: 4px;
+            }
+
+            .search-box h2 {
+                color: #fff;
+                margin-top: 0;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                font-size: 1.5rem;
+                border-bottom: 1px solid #1c1533;
+                padding-bottom: 10px;
+                margin-bottom: 14px;
+                text-align: center;
+            }
+
+        .checkbox-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 25px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+            .checkbox-row input[type="checkbox"] {
+                width: 18px;
+                height: 18px;
+                accent-color: var(--accent-purple);
+                cursor: pointer;
+            }
+
+        .range-wrapper label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+            .range-wrapper label .value-container {
+                color: var(--accent-purple);
+                font-weight: 800;
+            }
+
+            .range-wrapper label #rangeValue {
+                margin-right: 4px;
+            }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: #05030a;
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
+
+            input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: var(--accent-purple);
+                cursor: pointer;
+                box-shadow: 0 0 10px var(--primary-glow);
+                transition: transform 0.1s;
+            }
+
+                input[type="range"]::-webkit-slider-thumb:hover {
+                    transform: scale(1.2);
+                }
+
+        #advancedFilters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-areas:
+                "plec alkohol palenie"
+                "hobby gry muzyka"
+                ". ulubione .";
+            gap: 10px;
+            padding: 10px 15px;
+        }
+
+        .preferences-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+            .preferences-grid .form-group:last-child {
+                grid-column: 2;
+            }
+
+        @media (max-width: 768px) {
+            .preferences-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+                .preferences-grid .form-group:last-child {
+                    grid-column: span 2;
+                }
+        }
+
+        #advancedFilters .form-group:nth-child(1) {
+            grid-area: plec;
+        }
+
+        #advancedFilters .form-group:nth-child(2) {
+            grid-area: alkohol;
+        }
+
+        #advancedFilters .form-group:nth-child(3) {
+            grid-area: palenie;
+        }
+
+        #advancedFilters .form-group:nth-child(4) {
+            grid-area: hobby;
+        }
+
+        #advancedFilters .form-group:nth-child(5) {
+            grid-area: gry;
+        }
+
+        #advancedFilters .form-group:nth-child(6) {
+            grid-area: muzyka;
+        }
+
+        #advancedFilters .form-group:nth-child(7) {
+            grid-area: ulubione;
+        }
+
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                color: #94a3b8;
+                font-size: 12px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                height: 30px;
+                display: flex;
+                align-items: flex-end;
+            }
+
+            .form-group select, .form-group input[type="text"] {
+                width: 100%;
+                padding: 12px;
+                background: #120e24;
+                border: 1px solid var(--primary);
+                border-radius: 8px;
+                color: #fff;
+                font-family: 'Orbitron', sans-serif;
+                font-size: 13px;
+                outline: none;
+                transition: all 0.3s ease;
+            }
+
+                .form-group select:focus, .form-group input[type="text"]:focus {
+                    border-color: var(--primary-glow);
+                    box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+                }
+
+        .multi-select {
+            background: #120e24 !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important;
+            padding: 12px !important;
+            position: relative !important;
+            min-height: 140px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+            box-sizing: border-box !important;
+            transition: all 0.3s ease;
+        }
+
+            .multi-select:focus-within {
+                border-color: var(--accent-purple) !important;
+                box-shadow: 0 0 12px rgba(168, 85, 247, 0.25);
+            }
+
+            .multi-select input[type="text"] {
+                width: 100% !important;
+                padding: 8px 12px !important;
+                background: #020617 !important;
+                border: 1px solid rgba(89, 37, 145, 0.4) !important;
+                border-radius: 6px !important;
+                color: #fff !important;
+                font-family: 'Orbitron', sans-serif !important;
+                font-size: 11px !important;
+                margin-top: 0 !important;
+                box-sizing: border-box !important;
+                order: 1 !important;
+            }
+
+        .selected-container {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            margin-bottom: 0 !important;
+            min-height: 24px !important;
+            align-content: flex-start;
+            order: 2 !important;
+            overflow-y: auto;
+            max-height: 75px;
+        }
+
+        #advancedFilters .tag {
+            background: linear-gradient(135deg, #1b0720, #592591) !important;
+            border: 1px solid rgba(168, 85, 247, 0.4) !important;
+            color: #f1edfa !important;
+            padding: 4px 8px 4px 10px !important;
+            border-radius: 20px !important;
+            font-size: 11px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+            cursor: default !important;
+        }
+
+            #advancedFilters .tag .remove-btn {
+                cursor: pointer !important;
+                color: #a855f7 !important;
+                font-weight: bold !important;
+                font-size: 12px !important;
+                line-height: 1 !important;
+                transition: color 0.2s;
+            }
+
+                #advancedFilters .tag .remove-btn:hover {
+                    color: #ff4a4a !important;
+                }
+
+        .dropdown {
+            position: absolute !important;
+            top: 45px !important;
+            left: 12px !important;
+            right: 12px !important;
+            width: auto !important;
+            max-height: 130px !important;
+            overflow-y: auto !important;
+            background: #160d1b !important;
+            border: 1px solid var(--accent-purple) !important;
+            border-radius: 6px !important;
+            z-index: 99999 !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8) !important;
+            box-sizing: border-box !important;
+        }
+
+            .dropdown div {
+                padding: 8px 12px !important;
+                cursor: pointer !important;
+                font-size: 12px !important;
+                color: #e5e7eb !important;
+                transition: background 0.2s, color 0.2s;
+            }
+
+                .dropdown div:hover {
+                    background: rgba(168, 85, 247, 0.2) !important;
+                    color: #54d6ba !important;
+                }
+
+        .search-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            border-top: 1px solid #1c1533;
+            padding-top: 15px;
+        }
+
+            .search-actions button {
+                flex: 1;
+                padding: 14px;
+                background: transparent;
+                border: 1px solid var(--primary);
+                color: white;
+                font-family: 'Orbitron', sans-serif;
+                font-size: 12px;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: 0.3s ease;
+            }
+
+                .search-actions button:first-child {
+                    background: var(--accent-purple);
+                    color: #020617;
+                    border-color: transparent;
+                }
+
+                    .search-actions button:first-child:hover {
+                        background: #c084fc;
+                        box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+                    }
+
+                .search-actions button:nth-child(2):hover {
+                    background: rgba(248, 113, 113, 0.1);
+                    border-color: var(--neon-red);
+                    color: var(--neon-red);
+                }
+
+                .search-actions button:last-child {
+                    border-color: #64748b;
+                    color: #94a3b8;
+                }
+
+                    .search-actions button:last-child:hover {
+                        background: #1e293b;
+                        color: #fff;
+                    }
+
+        .search-pulse-circle {
+            animation: pulseCircle 2s infinite;
+        }
+
+        @keyframes pulseCircle {
+            0% {
+                opacity: 0.7;
+            }
+
+            50% {
+                opacity: 0.2;
+            }
+
+            100% {
+                opacity: 0.7;
+            }
+        }
+
+        .search-user-marker {
+            animation: foundPulse 2s infinite;
+        }
+
+        @keyframes foundPulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.3);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #toggleFriendsMobileBtn {
+            display: none;
+        }
+
+        #closeFriendsMobileBtn {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            #app-wrapper {
+                flex-direction: column !important;
+                position: relative !important;
+                overflow: hidden !important;
+            }
+
+            #left-section {
+                width: 100vw !important;
+                height: 100vh !important;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .top-nav {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 10px !important;
+                padding: 14px !important;
+                background: #110714 !important;
+                height: auto !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
+            }
+
+            .left-nav,
+            .right-nav,
+            .nav-links {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                gap: 10px !important;
+            }
+
+                .top-nav > span:first-child,
+                .left-nav > span:first-child {
+                    order: 1 !important;
+                    text-align: center;
+                    margin: 0 0 4px 0 !important;
+                    font-size: 20px !important;
+                    letter-spacing: 1px;
+                    display: block !important;
+                    width: 100% !important;
+                }
+
+            .user-menu-container {
+                order: 2 !important;
+                width: 100% !important;
+                margin-left: 0 !important;
+                position: relative !important;
+            }
+
+            #toggleFriendsMobileBtn {
+                order: 3 !important;
+                display: flex !important;
+                width: 100% !important;
+                height: 42px !important;
+            }
+
+            .search-container {
+                order: 6 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                position: relative !important;
+                width: 100% !important;
+                margin: 4px 0 !important;
+                box-sizing: border-box !important;
+            }
+
+            #navMMStatus, .mm-status {
+                order: 7 !important;
+                margin-left: 0 !important;
+                width: 100% !important;
+                justify-content: center;
+                height: 45px !important;
+            }
+
+            #gameSearch {
+                width: 100% !important;
+                box-sizing: border-box !important;
+                padding: 12px !important;
+                font-size: 13px !important;
+                height: 42px !important;
+            }
+
+            .nav-links .nav-btn:nth-child(1) {
+                order: 4 !important;
+                width: 100% !important;
+            }
+
+            .nav-links .nav-btn:nth-child(2) {
+                order: 5 !important;
+                width: 100% !important;
+            }
+
+            #navMMStatus, .mm-status {
+                grid-row: 8 !important;
+                margin-left: 0 !important;
+                width: 100% !important;
+                justify-content: center;
+                height: 45px !important;
+            }
+
+            #searchResults {
+                position: absolute !important;
+                top: 44px !important;
+                left: 0 !important;
+                width: 100% !important;
+                background: #0f172a !important;
+                border: 1px solid var(--accent-purple) !important;
+                border-radius: 4px !important;
+                box-sizing: border-box !important;
+                z-index: 99999 !important;
+                max-height: 200px !important;
+                overflow-y: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                list-style: none !important;
+            }
+
+                #searchResults:empty,
+                #searchResults.hidden {
+                    display: none !important;
+                }
+
+                 #advancedFilters {
+        grid-template-columns: 1fr !important;
+        grid-template-areas: none !important;
+        gap: 16px !important;
+        padding: 15px 10px !important;
+    }
+
+    #advancedFilters .form-group:nth-child(1),
+    #advancedFilters .form-group:nth-child(2),
+    #advancedFilters .form-group:nth-child(3),
+    #advancedFilters .form-group:nth-child(4),
+    #advancedFilters .form-group:nth-child(5),
+    #advancedFilters .form-group:nth-child(6),
+    #advancedFilters .form-group:nth-child(7) {
+        grid-area: auto !important;
+    }
+
+    #advancedFilters .form-group label {
+        height: auto !important;
+        margin-bottom: 6px !important;
+        display: block !important;
+        color: #94a3b8 !important; 
+    }
+
+    #advancedFilters .form-group select, 
+    #advancedFilters .form-group input[type="text"] {
+        width: 100% !important;
+        padding: 12px !important;
+        background: #120e24 !important; 
+        border: 1px solid #a855f7 !important; 
+        border-radius: 8px !important;
+        color: #fff !important; 
+        font-family: 'Orbitron', sans-serif !important;
+        font-size: 13px !important;
+        outline: none !important;
+        box-sizing: border-box !important;
+    }
+
+    #advancedFilters .multi-select {
+        background: #120e24 !important; 
+        border: 1px solid #a855f7 !important; 
+        border-radius: 8px !important;
+        padding: 12px !important;
+        position: relative !important;
+        min-height: auto !important; 
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    #advancedFilters .multi-select input[type="text"] {
+        background: #020617 !important; 
+        border: 1px solid rgba(168, 85, 247, 0.4) !important;
+    }
+
+    #advancedFilters .dropdown {
+        top: auto !important; 
+        bottom: auto !important;
+        position: absolute !important;
+        width: calc(100% - 24px) !important; 
+        left: 12px !important;
+        right: 12px !important;
+        max-height: 150px !important; 
+    }
+
+    #advancedFilters .dropdown div {
+        padding: 12px 16px !important; 
+        font-size: 13px !important; 
+    }
+
+    #advancedFilters .tag {
+        padding: 6px 12px 6px 14px !important; 
+        font-size: 12px !important;
+        border-radius: 24px !important;
+    }
+
+    #advancedFilters .tag .remove-btn {
+        font-size: 14px !important; 
+        padding: 2px 6px !important; 
+    }
+
+    #advancedFilters .selected-container {
+        max-height: 100px !important; 
+        gap: 8px !important; 
+    }
+
+            .user-menu-trigger {
+                display: flex !important;
+                justify-content: space-between !important;
+                padding: 10px 15px !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
+            }
+
+            .user-dropdown {
+                width: 100% !important;
+                position: absolute !important;
+                top: calc(100% + 4px) !important;
+                box-sizing: border-box !important;
+                z-index: 9999 !important;
+            }
+
+            .nav-btn {
+                width: 100% !important;
+                min-width: 0 !important;
+                margin: 0 !important;
+                padding: 12px 10px !important;
+                font-size: 12px !important;
+                box-sizing: border-box !important;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                height: 42px !important;
+            }
+
+            .top-nav button[onclick="openSearchModal()"] {
+                margin-left: 0 !important;
+            }
+
+            #right-sidebar {
+                position: fixed !important;
+                top: 0 !important;
+                right: -100% !important;
+                width: 100% !important;
+                height: 100dvh !important;
+                transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                box-sizing: border-box !important;
+                box-shadow: -10px 0 25px rgba(0, 0, 0, 0.5);
+            }
+
+                #right-sidebar.active {
+                    right: 0 !important;
+                }
+
+            #sidebarBellBtn.pending-toggle-btn {
+                width: auto !important;
+                padding: 0 12px !important;
+                height: 32px !important;
+                font-size: 10px !important;
+                margin-left: auto !important;
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+                box-sizing: border-box !important;
+            }
+
+            .sidebar-header {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                padding: 16px 12px;
+                box-sizing: border-box;
+            }
+
+            .chat-box {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100vw !important;
+                height: 100dvh !important;
+                margin: 0 !important;
+                transform: none !important;
+                border-radius: 0 !important;
+            }
+
+            .search-box {
+                width: 95% !important;
+                max-height: 85vh !important;
+                padding: 20px !important;
+                box-sizing: border-box;
+            }
+
+            .search-actions {
+                flex-direction: column !important;
+                gap: 10px;
+            }
+
+            #closeFriendsMobileBtn {
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+                background: transparent !important;
+                border: 1px solid var(--neon-red) !important;
+                color: var(--neon-red) !important;
+                font-family: 'Orbitron';
+                font-weight: bold;
+                font-size: 14px;
+                padding: 0 12px !important;
+                height: 32px !important;
+                cursor: pointer;
+                border-radius: 4px;
+                box-shadow: 0 0 8px rgba(248, 113, 113, 0.3);
+                box-sizing: border-box !important;
+            }
+
+            .searchbar-menu {
+                flex-direction: column !important;
+                width: 92% !important;
+                min-width: 92% !important;
+                max-width: 92% !important;
+                height: auto !important;
+                max-height: 90vh !important;
+                position: relative !important;
+            }
+
+                .searchbar-menu.no-art {
+                    min-width: 92% !important;
+                }
+
+            .searchbar-menu-art {
+                width: 100% !important;
+                min-width: 100% !important;
+                height: 140px !important;
+                background-size: cover !important;
+                background-repeat: no-repeat !important;
+                background-position: center center !important;
+                border-right: none !important;
+                border-bottom: 1px solid rgba(168, 85, 247, 0.3) !important;
+            }
+
+            .searchbar-menu-content {
+                padding: 20px !important;
+                overflow-y: auto !important;
+                flex: none !important;
+                display: flex;
+                flex-direction: column;
+            }
+
+            #sbViewContainer {
+                justify-content: flex-start !important;
+                flex: none !important;
+            }
+
+            .sb-nav-controls {
+                position: absolute !important;
+                top: 12px !important;
+                right: 12px !important;
+                z-index: 5000 !important;
+                display: flex !important;
+                gap: 8px !important;
+            }
+
+            #sbMenuCloseButton, #sbBackButton {
+                background: rgba(17, 7, 20, 0.85) !important;
+                border: 1px solid var(--accent-purple) !important;
+                color: #fff !important;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.8) !important;
+                width: 36px !important;
+                height: 36px !important;
+                border-radius: 8px !important;
+                font-size: 14px !important;
+            }
+
+            #sbMainMenuTitle {
+                font-size: 22px !important;
+                margin-top: 5px !important;
+                margin-bottom: 20px !important;
+                text-align: center !important;
+                display: block !important;
+                width: 100% !important;
+                padding-right: 0 !important;
+            }
+
+            #sbMainMenuView {
+                gap: 10px !important;
+                width: 100% !important;
+            }
+
+                #sbMainMenuView button {
+                    padding: 14px 12px !important;
+                    font-size: 12px !important;
+                    line-height: 1.4 !important;
+                    text-align: center !important;
+                    box-sizing: border-box !important;
+                }
+
+            #sbEntriesListView, #sbEntryCreatorView {
+                position: static !important;
+                top: 0 !important;
+                padding: 0 !important;
+            }
+
+            #sbEntriesListView {
+                margin-top: 10px !important;
+            }
+
+            #sbEntryCreatorView {
+                margin-top: 10px;
+                gap: 15px !important;
+            }
+
+            #sbEntryCreatorHeader {
+                gap: 10px !important;
+                padding-bottom: 10px !important;
+            }
+
+            #sbEntryCreatorGameIcon {
+                width: 40px !important;
+                height: 40px !important;
+            }
+
+            #sbEntryCreatorGameName {
+                font-size: 18px !important;
+            }
+
+            #sbEntryCreatorButtons {
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+
+                #sbEntryCreatorButtons button {
+                    padding: 12px 15px !important;
+                }
+
+            .chat-input-bar {
+                padding: 5px 8px !important;
+                gap: 6px !important;
+            }
+
+            .chat-footer .btn-send {
+                width: auto !important;
+                height: auto !important;
+                padding: 6px 12px !important;
+                font-size: 11px !important;
+                flex-shrink: 0 !important;
+                margin: 0 !important;
+            }
+
+            .btn-icon, .btn-icon-clear {
+                flex-shrink: 0 !important;
+                padding: 4px !important;
+                margin: 0 !important;
+            }
+
+            .chat-message-input {
+                padding: 6px 0 !important;
+                min-width: 0 !important;
+            }
+        }
+                .user-menu-container {
+            position: relative;
+            z-index: 9999 !important;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 200px;
+            background: #0f172a;
+            border: 1px solid var(--accent-purple);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+            .user-dropdown.hidden {
+                display: none !important;
+            }
+
+        .user-menu-trigger {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 7px 18px;
+            border: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+            .user-menu-trigger:hover {
+                border-color: var(--accent-purple);
+                box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+            }
+
+        .nav-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .nav-username {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .nav-arrow {
+            color: var(--accent-purple);
+            font-size: 11px;
+            transition: transform 0.3s;
+        }
+
+        .dropdown-item {
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: 'Orbitron';
+            padding: 12px 15px;
+            font-size: 11px;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+            .dropdown-item:hover {
+                background: rgba(168, 85, 247, 0.15);
+                color: var(--accent-purple);
+            }
+
+            .dropdown-item.logout-item:hover {
+                background: rgba(248, 113, 113, 0.1);
+                color: var(--neon-red);
+            }
+
+        @media (max-width: 768px) {
+            .user-menu-container {
+                width: 100% !important;
+                margin-left: 0 !important;
+            }
+
+            .user-menu-trigger {
+                justify-content: space-between;
+            }
+
+            .user-dropdown {
+                width: 100%;
+                position: relative;
+                top: 5px;
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .custom-map-tooltip {
+            background: rgba(15, 23, 42, 0.9) !important;
+            border: 1px solid rgba(168, 85, 247, 0.4) !important;
+            border-radius: 8px !important;
+            padding: 8px 12px !important;
+            font-family: 'Orbitron', sans-serif !important;
+            color: #eadfed !important;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3) !important;
+        }
+
+            .custom-map-tooltip::before {
+                border-top-color: rgba(15, 23, 42, 0.9) !important;
+            }
+
+            .custom-map-tooltip .tooltip-title {
+                font-weight: 700;
+                font-size: 13px;
+                letter-spacing: 0.5px;
+                color: #a855f7;
+                margin-bottom: 2px;
+            }
+
+            .custom-map-tooltip .tooltip-distance {
+                font-size: 11px;
+                color: #94a3b8;
+            }
+
+    </style>
+</head>
+
+<body>
+    <div id="auth-overlay">
+        <div class="logo">MatchikoMap</div>
+    </div>
+
+    <div id="app-wrapper">
+        <div id="left-section">
+           <nav class="top-nav">
+                <div class="left-nav">
+                    <span style="color:var(--accent-purple); font-weight:900; text-align:center;">MatchikoMap</span>
+                    <button class="nav-btn" id="toggleFriendsMobileBtn" onclick="toggleFriendsSidebar()">ZNAJOMI</button>
+                    <div class="user-menu-container" id="userMenuContainer">
+                <div class="user-menu-trigger" onclick="toggleUserDropdown(event)">
+                    <div id="nav-user-avatar" class="nav-avatar"></div>
+                    <span id="nav-user-name" class="nav-username">Ładowanie...</span>
+                    <span class="nav-arrow">▼</span>
+                </div>
+                <div id="userDropdown" class="user-dropdown hidden">
+                    <button class="dropdown-item" onclick="location.href='profil.html'">PROFIL</button>
+                    <button class="dropdown-item" id="toggle-location-btn">WŁĄCZ/WYŁĄCZ DOSTĘP DO LOKALIZACJI</button>
+                    <button class="dropdown-item logout-item" onclick="logout()">WYLOGUJ</button>
+                </div>
+                </div>
+            </div>
+
+                <div class="right-nav">
+                    <div class="search-container">
+                        <input type="text" id="gameSearch" placeholder="Szukaj gry..." autocomplete="off"/>
+                        <ul id="searchResults" class="results-list"></ul>
+                    </div>
+
+                    <div id="navMMStatus" class="mm-status hidden">
+                <span id="navMMTimer">00:00</span>
+                <span id="navMMStateText"></span>
+                <button id="navMMActionButton" class="mm-btn">STOP</button>
+            </div>
+                    <div class="nav-links">
+                        <button class="nav-btn" onclick="openSearchModal()">SZUKAJ ZNAJOMYCH</button>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="map"></div>
+            
+            <div id="searchModal" class="search-modal hidden">
+                <div class="search-box">
+                    <h2>Zaawansowane Wyszukiwanie</h2>
+
+                    <label class="checkbox-row">
+                        <input type="checkbox" id="similarToMe">
+                        Znajdź podobnych do mnie
+                    </label>
+
+                    <div class="range-wrapper">
+                        <label>
+                            Maksymalny promień wyszukiwania:
+                            <span class="value-container">
+                                <span id="rangeValue">15</span>KM
+                            </span>
+                        </label>
+                        <input type="range" id="searchRange" min="1" max="35" value="15">
+                    </div>
+
+                    <div id="advancedFilters">
+                        <div class="form-group">
+                            <label>Płeć</label>
+                            <select id="searchGender">
+                                <option value="">Dowolna</option>
+                                <option>Mężczyzna</option>
+                                <option>Kobieta</option>
+                                <option>Inna</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Preferencje: Alkohol</label>
+                            <select id="searchAlcohol">
+                                <option value="">Dowolne</option>
+                                <option>Nie piję</option>
+                                <option>Okazjonalnie</option>
+                                <option>Często</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Preferencje: Palenie</label>
+                            <select id="searchSmoking">
+                                <option value="">Dowolne</option>
+                                <option>Nie palę</option>
+                                <option>Okazjonalnie</option>
+                                <option>Palę</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Filtruj Hobby</label>
+                            <div class="multi-select" data-type="search-hobby">
+                                <div class="selected-container"></div>
+                                <input type="text" placeholder="Szukaj hobby...">
+                                <div class="dropdown hidden"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Filtruj Typy Gier</label>
+                            <div class="multi-select" data-type="search-games">
+                                <div class="selected-container"></div>
+                                <input type="text" placeholder="Szukaj typu gry...">
+                                <div class="dropdown hidden"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Filtruj Ulubione Gry</label>
+                            <div class="multi-select" data-type="search-favoriteGames">
+                                <div class="selected-container"></div>
+                                <input type="text" placeholder="Szukaj gier...">
+                                <div class="dropdown hidden"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Filtruj Gust Muzyczny</label>
+                            <div class="multi-select" data-type="search-music">
+                                <div class="selected-container"></div>
+                                <input type="text" placeholder="Szukaj muzyki...">
+                                <div class="dropdown hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="search-actions">
+                        <button onclick="startSearch()">URUCHOM SZUKANIE</button>
+                        <button onclick="stopSearch()">RESET / WYCZYŚĆ</button>
+                        <button onclick="closeSearchModal()">ZAMKNIJ</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="chatWindow" class="chat-box">
+                <div class="chat-header">
+                    <span id="chatTitle">LINK_ACTIVE</span>
+                    <button class="close-chat-btn" onclick="closeChat()">✕</button>
+                </div>
+                <div id="messages">
+                    <div style="opacity:0.5; text-align:center; margin-top:20px;">Zacznij konwersację...</div>
+                </div>
+
+                <div class="chat-footer">
+                    <div class="typing-status-container">
+                        <span id="userTypingLabel"></span>
+                    </div>
+
+                    <div class="chat-input-bar">
+                        <button onclick="document.getElementById('attachFile').click()" class="btn-icon" title="Dodaj plik" id="attachBtn">
+                            <span class="material-symbols-outlined">photo_library</span>
+                        </button>
+
+                        <button id="clearFileBtn" type="button" class="btn-icon hidden" title="Usuń załącznik">
+                            <span class="material-symbols-outlined">cancel</span>
+                        </button>
+
+                        <input id="messageInput" type="text" placeholder="Type message..." class="chat-message-input">
+
+                        <div class="emoji-container">
+                            <button id="emojiPickerBtn" class="btn-icon" title="Dodaj emoji">😊</button>
+
+                            <div id="emojiPicker" class="emoji-picker hidden">
+                                <span onclick="addEmoji('🎮')">🎮</span>
+                                <span onclick="addEmoji('🔥')">🔥</span>
+                                <span onclick="addEmoji('💀')">💀</span>
+                                <span onclick="addEmoji('👑')">👑</span>
+                                <span onclick="addEmoji('😎')">😎</span>
+                                <span onclick="addEmoji('😂')">😂</span>
+                                <span onclick="addEmoji('👍')">👍</span>
+                                <span onclick="addEmoji('❤️')">❤️</span>
+                                <span onclick="addEmoji('🥶')">🥶</span>
+                                <span onclick="addEmoji('💩')">💩</span>
+                                <span onclick="addEmoji('😍')">😍</span>
+                                <span onclick="addEmoji('🤔')">🤔</span>
+                                <span onclick="addEmoji('😡')">😡</span>
+                                <span onclick="addEmoji('😊')">😊</span>
+                                <span onclick="addEmoji('😢')">😢</span>
+                            </div>
+                        </div>
+
+                        <button id="sendButton" class="btn-send">SEND</button>
+                    </div>
+                    <input type="file" id="attachFile" accept="image/*,video/*" style="display:none">
+                </div>
+            </div>
+
+        </div>
+
+        <aside id="right-sidebar">
+            <div class="sidebar-header">
+                <button id="closeFriendsMobileBtn" onclick="toggleFriendsSidebar()">✕</button>
+                <span style="margin-left: 15px;">ZNAJOMI</span>
+                <button id="sidebarBellBtn" class="nav-btn pending-toggle-btn" onclick="togglePendingList()">POWIADOMIENIA</button>
+            </div>
+
+            <div id="pendingDropdown" class="hidden"></div>
+            <div class="conversations-list" id="friendsContainer"></div>
+
+            <div class="add-friend-panel">
+                <div class="add-friend-title">DODAJ PO NICKU</div>
+                <div class="add-friend-group">
+                    <input type="text" id="friendSearchInput" class="add-friend-input" placeholder="Wpisz nick..." autocomplete="off">
+                    <button class="btn-icon" onclick="addFriendByNick()">+</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div id="sbMenuOverlay" class="searchbar-menu-overlay hidden">
+        <div class="searchbar-menu" id="sbMenu">
+            <div class="searchbar-menu-art" id="sbMenuArt"></div>
+            <div class="searchbar-menu-content">
+                <div class="sb-nav-controls">
+                    <button class="back-btn hidden" id="sbBackButton">←</button>
+                    <button class="close-chat-btn" id="sbMenuCloseButton">X</button>
+                </div>
+
+                <div id="sbViewContainer">
+                    <div id="sbMainMenuView">
+                        <span id="sbMainMenuTitle"></span>
+                        <button class="nav-btn" id="sbMainMenuToggleConversationsButton">Wyświetl/ukryj konwersacje globalne dla tej gry</button>
+                        <button class="nav-btn" id="sbMainMenuToggleFavouriteButton">Dodaj/usuń z ulubionych</button>
+                        <button class="nav-btn" id="sbMainMenuEntryCreatorButton">Znajdź kogoś do wspólnej gry</button>
+                        <button class="nav-btn" id="sbMainMenuEntriesListButton">Wyświetl listę osób, które chcą teraz zagrać w tą samą grę</button>
+                    </div>
+
+                    <div id="sbEntriesListView" class="hidden">
+                        <ul id="sbEntriesList"></ul>
+                        <div id="sbEntriesEmptyMessage" class="hidden">
+                            Brak aktywnych ogłoszeń w Twojej okolicy,<br> ale nic Cię nie powstrzymuje przed utworzeniem pierwszego.
+                        </div>
+                    </div>
+
+                    <div id="sbEntryCreatorView" class="hidden">
+                        <div id="sbEntryCreatorHeader">
+                            <div id="sbEntryCreatorGameIcon"></div>
+                            <h2 id="sbEntryCreatorGameName">Counter-Strike 2</h2>
+                        </div>
+
+                        <div class="sb-form-group">
+                            <label for="sbEntryCreatorDescription" class="sb-form-label">Opis Twojego ogłoszenia</label>
+                            <textarea id="sbEntryCreatorDescription" placeholder="Przedstaw się lub napisz kogo szukasz..."></textarea>
+                        </div>
+
+                        <div class="sb-form-group">
+                            <span class="sb-form-label">Wybierz tryb dobierania graczy</span>
+                            <div id="sbEntryCreatorButtons">
+                                <button id="sbEntryCreatorAutoButton">
+                                    <span>Automatyczny</span>
+                                    <small>Zezwól na automatyczne dobranie kompana</small>
+                                </button>
+                                <button id="sbEntryCreatorManualButton">
+                                    <span>Manualny</span>
+                                    <small>Nie zezwalaj na automatyczne dobranie kompana</small>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mmOverlay" class="mmOverlay hidden">
+        <div class="mmWindow">
+            <div class="mmGameHeader">
+                <img id="mmWindowGameIcon" class="mmGameIcon">
+                <div id="mmWindowGameName" class="mmGameName"></div>
+            </div>
+
+            <div class="mmUserSection">
+                <img id="mmWindowProfileImage" class="mmWindowProfileImage" src="./publicResources/defaultAvatars/domyslne.png">
+                <div class="mmUserText">
+                    <div id="mmWindowUserName" class="mmWindowUserName">jkblonowski13</div>
+                    <button id="mmWindowShowProfileButton" class="mmWindowShowProfileButton">Zobacz profil</button>
+                </div>
+            </div>
+
+            <div class="mmDescriptionContainer">
+                <label class="mmDescriptionLabel">Opis zgłoszenia</label>
+                <div id="mmWindowDescription" class="mmWindowDescription"></div>
+            </div>
+
+            <div class="mmWindowButtons">
+                <button id="mmWindowAcceptButton" class="mmWindowButton mmWindowAcceptButton">
+                    <span>Akceptuj</span>
+                    <small>Zapoznajmy się</small>
+                </button>
+                <button id="mmWindowRejectButton" class="mmWindowButton mmWindowRejectButton">
+                    <span>Odrzuć</span>
+                    <small>Nie tym razem</small>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="/css/toast.css">
+    <script src="/js/toast.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="./js/authFetch.js"></script>
+    <script src="./js/avatar.js"></script>
+    <script src="js/distance.js"></script>
+    <script>
+
+        let myMarker = null;
+        let myLatitude = null;
+        let myLongitude = null;
+        let locationPermission = false;
+
+        const polandBounds = L.latLngBounds(
+            L.latLng(48.9, 14.0),
+            L.latLng(55.0, 24.2)
+        );
+
+        const map = L.map('map', {
+            zoomControl: false,
+            maxBounds: polandBounds,
+            maxBoundsViscosity: 1.0,
+            minZoom: 7
+        }).setView([53.02, 18.42], 6);
+
+        const locationBtn = document.getElementById('toggle-location-btn');
+
+        async function checkLocationPermission() {
+            try {
+                const response = await authFetch('/api/Profile/LocationPermission');
+
+                if (response.ok) {
+                    const result = await response.json();
+
+                    if (result?.locationPermission) {
+                        return true;
+                    } else {
+                        showToast("Brak dostępu do lokalizacji.");
+                        return false;
+                    }
+                }
+
+                return false;
+
+            } catch (error) {
+                console.error("Błąd sprawdzania lokalizacji:", error);
+                return false;
+            }
+        }
+
+        locationBtn.addEventListener('click', async function (e) {
+            e.preventDefault();
+            try {
+                const response = await authFetch('/api/Profile/LocationPermission', { method: 'PATCH' });
+
+                if (response.ok) {
+                    const result = await response.json();
+
+                    showToast(result.locationPermission
+                        ? "Dostęp do lokalizacji został włączony."
+                        : "Lokalizacja została ukryta."
+                    );
+                    locationPermission = result.locationPermission;
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error("Błąd podczas zmiany statusu lokalizacji");
+            }
+        });
+
+        async function requestLocation() {
+            if (!navigator.geolocation) {
+                showToast("Brak dostępu do lokalizacji.");
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    myLatitude = latitude;
+                    myLongitude = longitude;
+
+                    map.flyTo([myLatitude, myLongitude], 13);
+                    if (myMarker) {
+                        map.removeLayer(myMarker);
+                    }
+
+                    const meResponse = await authFetch("/api/profile");
+                    const me = await meResponse.json();
+
+                    const avatarUrl = await getAvatar(me, 100);
+
+                    const myIcon = L.divIcon({
+                        className: 'custom-m',
+                        html: `
+                        <div class="user-marker circle"
+                             style="
+                                background-image:url('${avatarUrl}');
+                                background-size:cover;
+                                background-position:center;
+                                border-color:#00ffff;
+                                box-shadow:0 0 15px #00ffff;
+                             ">
+                        </div>
+                    `,
+                        iconSize: [44, 44],
+                        iconAnchor: [22, 22]
+                    });
+
+                    myMarker = L.marker([latitude, longitude], {
+                        icon: myIcon
+                    })
+                        .bindTooltip("TY", {
+                            direction: "top",
+                            offset: [0, -20]
+                        });
+
+                    userCluster.addLayer(myMarker);
+
+                    try {
+                        await authFetch("/api/location", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ latitude: latitude, longitude: longitude })
+                        });
+                    } catch (err) {
+                        console.error("Błąd zapisu lokalizacji", err);
+                    }
+                },
+                (error) => { showToast("Brak dostępu do lokalizacji. Zezwól przeglądarce na lokalizację."); },
+                { enableHighAccuracy: true }
+            );
+        }
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; CARTO'
+        }).addTo(map);
+
+        const userCluster = L.markerClusterGroup({
+            iconCreateFunction: function (cluster) {
+                const count = cluster.getChildCount();
+                return L.divIcon({
+                    html: `<div class="cluster-marker circle">${count}</div>`,
+                    className: 'custom-cluster',
+                    iconSize: [50, 50]
+                });
+            },
+            spiderfyDistanceMultiplier: 4,
+            chunkedLoading: true,
+            removeOutsideVisibleBounds: true
+        });
+        map.addLayer(userCluster);
+
+        const groupConversationCluster = L.markerClusterGroup({
+            iconCreateFunction: function (cluster) {
+                const count = cluster.getChildCount();
+                return L.divIcon({
+                    html: `<div class="cluster-marker square">${count}</div>`,
+                    className: 'custom-cluster',
+                    iconSize: [50, 50]
+                });
+            },
+            spiderfyDistanceMultiplier: 4,
+            chunkedLoading: true,
+            removeOutsideVisibleBounds: true
+        });
+        map.addLayer(groupConversationCluster);
+
+        const overlay = document.getElementById("auth-overlay");
+        let isLoading = false;
+        let myId = null;
+        const conversationsContainer = document.getElementById('friendsContainer');
+
+        const conversationViews = new Map();   // conversationId -> view
+        const userMarkers = new Map();  // conversationId -> marker
+        const searchUserMarkers = new Map();  // userId -> marker
+        const groupConversationMarkers = new Map(); // conversationId -> marker
+        const gamesMap = new Map();   // gameId -> game
+
+        async function loadData() {
+            if (isLoading) return;
+            isLoading = true;
+            try {
+                const res = await authFetch(`/api/Friendships/list/${myId}`);
+                if (!res.ok) return;
+
+                const conversations = await res.json();
+                if (!conversationsContainer) return;
+
+                const newIds = new Set();
+                conversations.sort((a, b) => {
+                    const aDate = a.lastMessage?.createdAt ?? a.createdAt;
+                    const bDate = b.lastMessage?.createdAt ?? b.createdAt;
+                    return new Date(bDate) - new Date(aDate);
+                });
+
+                for (const c of conversations) {
+                    const conversationId = c.conversationId;
+                    newIds.add(conversationId);
+                    await updateConversationView(c, { addToTop: false });
+                }
+
+                for (const [conversationId] of conversationViews.entries()) {
+                    if (!newIds.has(conversationId)) {
+                        removeConversation(conversationId);
+                    }
+                }
+                await getFavouriteConversations();
+                await getMyEntries();
+            } catch (e) {
+                console.error(e);
+            } {
+                isLoading = false;
+            }
+        }
+
+        async function updateConversationView(c, { addToTop = false } = {}) {
+            const conversationId = c.conversationId;
+            let view = conversationViews.get(conversationId);
+            const isNew = !view;
+
+            if (isNew) {
+                view = createConversationView(c);
+                conversationsContainer.appendChild(view.root);
+            }
+
+            const { avatarDiv, userNameDiv, statusDiv, lastMessageDiv } = view;
+            const userName = c.friend.userName;
+            const lat = c.friend.latitude;
+            const lng = c.friend.longitude;
+            const isActive = c.friend.isActive;
+            const lastMessage = c.lastMessage;
+            const avatar = await getAvatar(c.friend, 100);
+
+            userNameDiv.textContent = userName;
+            statusDiv.textContent = isActive ? 'ONLINE' : 'OFFLINE';
+            statusDiv.style.color = isActive ? '#4ade80' : '#f87171';
+
+            if (lastMessage && lastMessage.senderId) {
+                let prefix = lastMessage.senderId === myId ? "Ty: " : `${userName}: `;
+                let content = "";
+                if (lastMessage.content && lastMessage.content !== "") content = lastMessage.content;
+                else if (lastMessage.type === 1) content = "Wysłano zdjęcie";
+                else if (lastMessage.type === 2) content = "Wysłano film";
+                lastMessageDiv.textContent = prefix + content;
+            }
+
+            avatarDiv.style.backgroundImage = `url('${avatar}')`;
+            avatarDiv.style.borderColor = isActive ? '#4ade80' : '#f87171';
+            view.data = c;
+
+            updateMarker(c.conversationId, c.friend.userName, avatar, isActive, lat, lng);
+
+            if (addToTop) conversationsContainer.insertBefore(view.root, conversationsContainer.firstChild);
+            else conversationsContainer.appendChild(view.root);
+        }
+
+        function createConversationView(c) {
+            const conversationId = c.conversationId;
+            const root = document.createElement('div');
+            root.className = 'conversation-card';
+
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'avatar';
+
+            const info = document.createElement('div');
+            info.className = 'friend-info';
+
+            const userNameDiv = document.createElement('div');
+            userNameDiv.style.fontSize = '12px';
+            userNameDiv.style.fontWeight = '700';
+            userNameDiv.style.color = '#fff';
+
+            const statusDiv = document.createElement('div');
+            statusDiv.style.fontSize = '9px';
+
+            const lastMessageDiv = document.createElement('div');
+            lastMessageDiv.className = 'card-last-message';
+
+            const delBtn = document.createElement('button');
+            delBtn.className = 'del-btn';
+            delBtn.innerHTML = '<span class="material-symbols-outlined">delete</span>';
+
+            info.appendChild(userNameDiv);
+            info.appendChild(statusDiv);
+            info.appendChild(lastMessageDiv);
+            root.appendChild(avatarDiv);
+            root.appendChild(info);
+            root.appendChild(delBtn);
+
+            const view = { root, avatarDiv, userNameDiv, statusDiv, lastMessageDiv, delBtn, data: c };
+            attachViewEvents(view);
+            conversationViews.set(conversationId, view);
+            return view;
+        }
+
+        function attachViewEvents(view) {
+            const { root, avatarDiv, delBtn } = view;
+            const info = root.querySelector('.friend-info');
+
+            info.addEventListener("click", async () => {
+                const d = view.data;
+                if (d.friend.latitude && d.friend.longitude) {
+                    map.flyTo([d.friend.latitude, d.friend.longitude], 15);
+                }
+                await openChat(d.friend.userName, d.conversationId);
+            });
+
+            delBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                confirmDelete(view.data.friend.id, view.data.conversationId, view.data.friend.userName);
+            });
+            
+            avatarDiv.addEventListener('click', () => {
+                window.location.href = `/profil.html?id=${view.data.friend.id}`;
+            });
+        }
+
+        function updateLastMessage(msg) {
+            const conversationId = msg.conversationId;
+            const senderId = msg.senderId;
+            let view = conversationViews.get(conversationId);
+            if (!view) return;
+
+            conversationsContainer.insertBefore(view.root, conversationsContainer.firstChild);
+            let prefix = senderId === myId ? "Ty: " : `${view.userNameDiv.textContent}: `;
+            let content = "";
+            if (msg.content && msg.content !== "") content = msg.content;
+            else if (msg.type === 1) content = "Wysłano zdjęcie";
+            else if (msg.type === 2) content = "Wysłano film";
+            view.lastMessageDiv.textContent = prefix + content;
+        }
+
+        function updateMarker(conversationId, name, img, isActive, lat, lng, { isGroup = false } = {}) {
+            let marker, markerShape, markerBorderColor;
+
+            if (isGroup) {
+                marker = groupConversationMarkers.get(conversationId);
+                markerShape = 'square';
+                markerBorderColor = 'var(--accent-purple)';
+            } else {
+                marker = userMarkers.get(conversationId);
+                markerShape = 'circle';
+                markerBorderColor = isActive ? '#4ade80' : '#f87171';
+            }
+
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+                const newIcon = L.divIcon({
+                    className: 'custom-m',
+                    html: `<div class="user-marker ${markerShape}" style="background-image: url('${img}'); border-color: ${markerBorderColor}"></div>`,
+                    iconSize: [44, 44],
+                    iconAnchor: [22, 22]
+                });
+                marker.setIcon(newIcon);
+                return;
+            }
+
+            if (lat && lng) {
+                const icon = L.divIcon({
+                    className: 'custom-m',
+                    html: `<div class="user-marker ${markerShape}" style="background-image: url('${img}'); border-color: ${markerBorderColor}"></div>`,
+                    iconSize: [44, 44],
+                    iconAnchor: [22, 22]
+                });
+
+                marker = L.marker([lat, lng], { icon })
+                    .bindTooltip(name, { direction: 'top', offset: [0, -20] });
+
+                const distance = getDistance(lat, lng, myLatitude, myLongitude);
+                marker = L.marker([lat, lng], { icon }).bindTooltip(`
+                    <div class="tooltip-title">${name}</div>
+                    <div class="tooltip-distance">${distance} km stąd</div>
+                `, {
+                    direction: 'top',
+                    offset: [0, -20],
+                    className: 'custom-map-tooltip',
+                    opacity: 1
+                });
+
+                if (isGroup) {
+                    groupConversationCluster.addLayer(marker);
+                    groupConversationMarkers.set(conversationId, marker);
+                    marker.on('click', async () => {
+                        map.flyTo([lat, lng], 15);
+                        await openChat(name, conversationId);
+                    });
+                } else {
+                    userCluster.addLayer(marker);
+                    userMarkers.set(conversationId, marker);
+                    marker.on('click', () => {
+                        map.flyTo([lat, lng], 15);
+                        window.location.href = `/profil.html?id=${conversationViews.get(conversationId).data.friend.id}`;
+                    });
+                }
+            }
+        }
+
+        function updateStatus(status, conversationId) {
+            const view = conversationViews.get(conversationId);
+            const marker = userMarkers.get(conversationId);
+
+            if (!view) return;
+
+            view.statusDiv.textContent = status;
+            const color = status === "ONLINE" ? '#4ade80' : '#f87171';
+            view.statusDiv.style.color = color;
+
+            if (marker) {
+                const currentIcon = marker.options.icon;
+                if (currentIcon && currentIcon.options) {
+                    const currentHtml = currentIcon.options.html;
+                    const updatedHtml = currentHtml
+                        .replace(/border-color:\s*#[a-fA-F0-9]{3,6}/g, `border-color:${color}`)
+                        .replace(/box-shadow:\s*0\s*0\s*15px\s*#[a-fA-F0-9]{3,6}/g, `box-shadow:0 0 15px ${color}`);
+
+                    const newIcon = L.divIcon({
+                        className: currentIcon.options.className,
+                        html: updatedHtml,
+                        iconSize: currentIcon.options.iconSize,
+                        iconAnchor: currentIcon.options.iconAnchor
+                    });
+
+                    marker.setIcon(newIcon);
+
+                    if (typeof userCluster !== 'undefined' && userCluster.refreshIconOptions) {
+                        userCluster.refreshIconOptions(marker);
+                    }
+                }
+            }
+        }
+
+        async function addFriendByNick() {
+            const input = document.getElementById('friendSearchInput');
+            const nick = input.value.trim();
+            if (!nick) return;
+            try {
+                const res = await authFetch(`/api/Friendships/add-by-nick?nick=${encodeURIComponent(nick)}`, { method: 'POST' });
+                if (res.ok) {
+                    showToast("Pomyślnie wysłano zaproszenie");
+                    input.value = "";
+                } else { showToast("Błąd wysyłania zaproszenia"); }
+            } catch (e) { showToast("Błąd wysyłania zaproszenia"); }
+        }
+
+        async function confirmDelete(friendId, conversationId, name) {
+            if (!confirm(`Usunąć ${name}?`)) return;
+            try {
+                const res = await authFetch(`/api/Friendships/remove-friend/${friendId}`, { method: 'DELETE' });
+                if (res.ok) {
+                    removeFriend(conversationId);
+                    showToast("Pomyślnie usunięto znajomego");
+                }
+            } catch (e) {
+                showToast("Błąd usuwania znajomego");
+                console.error(e);
+            }
+        }
+
+        function removeFriend(conversationId) {
+            const view = conversationViews.get(conversationId);
+            if (view) {
+                if (view.data.conversationId === currentConversationId) closeChat();
+                view.root.remove();
+                conversationViews.delete(conversationId);
+            }
+            const marker = userMarkers.get(conversationId);
+            if (marker) {
+                userCluster.removeLayer(marker);
+                userMarkers.delete(conversationId);
+            }
+        }
+
+        const pendingViews = new Map();
+        let pendingContainer = null;
+        const sidebarBellBtn = document.getElementById("sidebarBellBtn");
+
+        function createPendingView(u) {
+            const root = document.createElement("div");
+            root.className = "pending-card";
+
+            const name = document.createElement("div");
+            name.className = "pending-name";
+
+            const actions = document.createElement("div");
+            actions.className = "pending-actions";
+
+            root.appendChild(name);
+            root.appendChild(actions);
+
+            const view = { root, name, actions, data: u };
+            pendingViews.set(u.id, view);
+            pendingContainer.appendChild(root);
+            return view;
+        }
+
+        async function updatePendingView(u) {
+            let view = pendingViews.get(u.id);
+            if (!view) { view = createPendingView(u); }
+
+            const { name, actions } = view;
+            view.data = u;
+            name.textContent = u.userName;
+            actions.innerHTML = "";
+
+            if (!u.isIncoming) {
+                const cancelBtn = document.createElement("button");
+                cancelBtn.textContent = "Anuluj";
+                cancelBtn.className = "reject";
+                cancelBtn.onclick = () => cancelRequest(u.id);
+                actions.appendChild(cancelBtn);
+            } else {
+                const acceptBtn = document.createElement("button");
+                acceptBtn.textContent = "Akceptuj";
+                acceptBtn.onclick = () => acceptRequest(u.id);
+
+                const rejectBtn = document.createElement("button");
+                rejectBtn.textContent = "Odrzuć";
+                rejectBtn.className = "reject";
+                rejectBtn.onclick = () => cancelRequest(u.id);
+
+                actions.appendChild(acceptBtn);
+                actions.appendChild(rejectBtn);
+            }
+        }
+
+        function removePending(userId) {
+            const view = pendingViews.get(userId);
+            if (!view) return;
+            view.root.remove();
+            pendingViews.delete(userId);
+        }
+
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById("messageInput");
+        const userTypingLabel = document.getElementById("userTypingLabel");
+        const attachmentFile = document.getElementById("attachFile");
+        let currentConversationId = null;
+        let connection = null;
+        let connectionReady = false;
+        let typingTimeout = null;
+        let oldestMessageId = null;
+        let isLoadingOlder = false;
+        let hasMoreMessages = true;
+        let observer = null;
+        let topSentinel = null;
+        let pendingAttachment = null;
+
+        document.getElementById("sendButton").addEventListener("click", async () => {
+            const text = messageInput.value.trim();
+            if (!text && !pendingAttachment) return;
+            if (!currentConversationId) return;
+
+            const incomingMessage = new FormData();
+            incomingMessage.append("conversationId", currentConversationId);
+            if (text) incomingMessage.append("content", text);
+            if (pendingAttachment) incomingMessage.append("file", pendingAttachment);
+            incomingMessage.append("connectionId", connection.connectionId);
+
+            clearSelectedFile();
+
+            try {
+                await authFetch(`/api/Conversations/${currentConversationId}`, {
+                    method: 'POST',
+                    body: incomingMessage
+                });
+                messageInput.value = "";
+                messagesDiv.scrollTo({ top: messagesDiv.scrollHeight, behavior: 'smooth' });
+            } catch (err) {
+                showToast("Wiadomość nie została wysłana");
+                console.error(err);
+            }
+        });
+
+        async function setupSignalRConnection() {
+            connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub", { withCredentials: true })
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            connection.on("ReceiveMessage", (m) => {
+                if (!currentConversationId || m.conversationId !== currentConversationId) return;
+                addMessage(m, { addToTop: false });
+                messagesDiv.scrollTo({ top: messagesDiv.scrollHeight, behavior: 'smooth' });
+                try { connection.invoke("MessageRead", currentConversationId); } catch (err) { console.warn(err); }
+            });
+
+            connection.on("UserTyping", (userName) => {
+                if (!userTypingLabel) return;
+                userTypingLabel.textContent = `${userName} pisze...`;
+                if (typingTimeout) clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => { userTypingLabel.textContent = ""; }, 2500);
+            });
+
+            connection.on("ConversationUpdated", (msg) => {
+                updateLastMessage(msg);
+                if (currentConversationId != msg.conversationId) {
+                    const notificationSound = new Audio('./publicResources/notification.mp3');
+                    try { notificationSound.play(); } catch {}
+                }
+            });
+
+            connection.on("RequestAccepted", (card) => {
+                removePending(card.friend.id);
+                updateConversationView(card, { addToTop: true });
+                showToast(`Użytkownik ${card.friend.userName} został twoim znajomym`);
+            });
+
+            connection.on("RequestCancelled", (friendId) => { removePending(friendId); });
+            connection.on("RemoveFriend", (conversationId) => { removeFriend(conversationId); });
+            connection.on("UpdateStatus", (status, conversationId) => { updateStatus(status, conversationId); });
+
+            connection.on("MessageEdited", (messageId, newContent) => {
+                const textSpan = document.querySelector(`#msg-w-${messageId} .msg-text-content`);
+                if (textSpan) {
+                    textSpan.textContent = newContent;
+                    textSpan.style.transition = "color 0.5s";
+                    textSpan.style.color = "var(--accent-purple)";
+                    setTimeout(() => textSpan.style.color = "", 1000);
+                }
+            });
+
+            connection.on("MessageDeleted", (messageId) => {
+                const el = document.getElementById(`msg-w-${messageId}`);
+                if (el) {
+                    el.remove();
+                }
+            });
+
+            connection.on("CompanionFound", async (mmNotification) => {
+                showToast("Znaleziono kompana");
+                if (myId === mmNotification.joiner.id) mmNotification.user = mmNotification.creator;
+                else mmNotification.user = mmNotification.joiner;
+                myMatch = mmNotification;
+                await showMatchmakingWindow(mmNotification);
+                setMatchmakingTimerUI("Pending", mmNotification.expiringAt);
+            });
+
+            connection.on("MatchmakingAccepted", async (card) => {
+                showToast("Matchmaking zakończony");
+                await updateConversationView(card, { addToTop: true });
+                setMatchmakingTimerUI("None", null);
+                if (card.friend.latitude && card.friend.longitude) {
+                    map.flyTo([card.friend.latitude, card.friend.longitude], 15);
+                }
+                await openChat(card.friend.userName, card.conversationId);
+            });
+
+            connection.on("MatchmakingAcceptedButFriendsAlready", async (conversationId) => {
+                showToast("Matchmaking zakończony");
+                setMatchmakingTimerUI("None", null);
+                const card = conversationViews.get(conversationId).data;
+                if (card.friend.latitude && card.friend.longitude) {
+                    map.flyTo([card.friend.latitude, card.friend.longitude], 15);
+                }
+                await openChat(card.friend.userName, conversationId);
+            });
+
+            connection.on("MatchmakingJoinerLeft", (data) => {
+                hideMatchmakingWindow();
+                if (data) {
+                    showToast("Dołączający odrzucił matchmaking");
+                    myMatch = data;
+                    setMatchmakingTimerUI("Searching", data.expiringAt);
+                } else {
+                    showToast("Twórca matcha cię odrzucił");
+                    myMatch = null;
+                    setMatchmakingTimerUI("None", null);
+                }
+            });
+
+            try { await connection.start(); } catch (err) { console.error(err); }
+            connectionReady = true;
+        }
+
+        function addMessage(m, { addToTop = false } = {}) {
+            const messagesDiv = document.getElementById('messages');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'msg-wrapper';
+            wrapper.id = `msg-w-${m.id}`;
+            wrapper.style.alignSelf = (myId === m.senderId) ? "flex-end" : "flex-start";
+            wrapper.style.display = "flex";
+            wrapper.style.flexDirection = "column";
+            wrapper.style.maxWidth = "85%";
+
+            const msg = document.createElement('div');
+            if (m.content === null) m.content = "";
+            msg.style.padding = "10px 14px";
+            msg.style.borderRadius = "12px";
+            msg.style.marginBottom = "4px";
+            msg.style.width = "fit-content";
+            msg.style.wordBreak = "break-word";
+            msg.style.fontSize = "13px";
+            msg.style.lineHeight = "1.4";
+
+            if (myId === m.senderId) {
+                msg.style.background = "var(--accent-purple)";
+                msg.style.color = "#fff";
+                msg.style.borderBottomRightRadius = "2px";
+                m.senderName = "Ty";
+            } else {
+                msg.style.background = "#1e293b";
+                msg.style.color = "#e5e7eb";
+                msg.style.borderBottomLeftRadius = "2px";
+            }
+
+            msg.innerHTML = "";
+
+            if (myId === m.senderId) {
+                const actionsDiv = document.createElement("div");
+                actionsDiv.className = "msg-actions";
+                actionsDiv.style.right = "0";
+
+                const editBtn = document.createElement("span");
+                editBtn.className = "action-btn";
+                editBtn.textContent = "✏️";
+                editBtn.onclick = () => editMessage(m.id);
+
+                const deleteBtn = document.createElement("span");
+                deleteBtn.className = "action-btn";
+                deleteBtn.style.color = "var(--neon-red)";
+                deleteBtn.textContent = "🗑️";
+                deleteBtn.onclick = () => deleteMessage(m.id);
+
+                actionsDiv.appendChild(editBtn);
+                actionsDiv.appendChild(deleteBtn);
+                msg.appendChild(actionsDiv);
+            } else {
+                const actionsDiv = document.createElement("div");
+                actionsDiv.className = "msg-actions";
+                actionsDiv.style.right = "1";
+
+                const reportBtn = document.createElement("span");
+                reportBtn.className = "action-btn";
+                reportBtn.textContent = "⚠️";
+                reportBtn.onclick = () => reportMessage(m.id);
+                actionsDiv.appendChild(reportBtn);
+                msg.appendChild(actionsDiv);
+            }
+
+            const senderB = document.createElement("b");
+            senderB.textContent = m.senderName;
+            msg.appendChild(senderB);
+            msg.appendChild(document.createElement("br"));
+
+            const contentSpan = document.createElement("span");
+            contentSpan.className = "msg-text-content";
+            contentSpan.textContent = m.content;
+            msg.appendChild(contentSpan);
+
+            if (m.attachments && m.attachments.length > 0) {
+                const att = m.attachments[0];
+                if (att.type && att.type.toLowerCase().startsWith("image")) {
+                    const img = document.createElement("img");
+                    img.src = `${att.url}`;
+                    img.style.maxWidth = "200px";
+                    img.style.display = "block";
+                    img.style.marginTop = "5px";
+                    img.style.borderRadius = "6px";
+
+                    img.style.cursor = "pointer";
+                    img.className = "chat-lightbox-trigger";
+
+                    img.onclick = () => {
+                        openImageInLightbox(img.src);
+                    };
+                    // -------------------------------------------------
+
+                    msg.appendChild(img);
+                }
+                if (att.type && att.type.toLowerCase().startsWith("video")) {
+                    const video = document.createElement("video");
+                    video.src = `${att.url}`;
+                    video.controls = true;
+                    video.style.maxWidth = "200px";
+                    video.style.display = "block";
+                    video.style.marginTop = "5px";
+                    video.style.borderRadius = "6px";
+                    msg.appendChild(video);
+                }
+            }
+
+            if (m.createdAt) {
+                const dateDiv = document.createElement('div');
+                dateDiv.style.fontSize = "10px";
+                dateDiv.style.color = "#aaa";
+                dateDiv.style.marginTop = "4px";
+
+                const messageDate = new Date(m.createdAt);
+                const now = new Date();
+                if (messageDate.getDate() === now.getDate() && messageDate.getMonth() === now.getMonth() && messageDate.getFullYear() === now.getFullYear()) {
+                    dateDiv.textContent = messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                } else {
+                    dateDiv.textContent = messageDate.toLocaleString();
+                }
+                msg.appendChild(dateDiv);
+            }
+
+            wrapper.appendChild(msg);
+
+            if (addToTop) messagesDiv.prepend(wrapper);
+            else {
+                messagesDiv.append(wrapper);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+        }
+
+        function openImageInLightbox(imageSrc) {
+            const lightbox = document.createElement('div');
+            lightbox.className = 'dynamic-lightbox';
+
+            const lightboxImg = document.createElement('img');
+            lightboxImg.src = imageSrc;
+
+            lightbox.appendChild(lightboxImg);
+            document.body.appendChild(lightbox);
+
+            lightbox.onclick = () => {
+                lightbox.remove();
+            };
+        }
+
+        async function editMessage(msgId) {
+            const wrapper = document.getElementById(`msg-w-${msgId}`);
+            if (!wrapper) return;
+            const textSpan = wrapper.querySelector('.msg-text-content');
+            const oldText = textSpan.textContent;
+            const newText = prompt("Edytuj wiadomość:", oldText);
+
+            if (newText === null || newText === oldText || newText.trim() === "") return;
+
+            try {
+                const res = await authFetch(`/api/Conversations/${currentConversationId}/Messages/${msgId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ Content: newText })
+                });
+                if (res.ok) {
+                    textSpan.textContent = newText;
+                    showToast("Wiadomość zaktualizowana");
+                } else { showToast("Nie udało się zapisać zmian"); }
+            } catch (err) { console.error(err); }
+        }
+
+        async function deleteMessage(msgId) {
+            if (!confirm("Na pewno chcesz usunąć tę wiadomość?")) return;
+            try {
+                const res = await authFetch(`/api/Conversations/${currentConversationId}/Messages/${msgId}`, { method: 'DELETE' });
+                if (res.ok) {
+                    const el = document.getElementById(`msg-w-${msgId}`);
+                    if (el) el.remove();
+                    showToast("Wiadomość została usunięta");
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        async function reportMessage(msgId) {
+            if (!confirm("Czy na pewno chcesz zgłosić tą wiadomość?")) return;
+            try {
+                const res = await authFetch(`/api/Conversations/Messages/Report/${msgId}`, { method: 'PATCH' });
+                if (res.ok) {
+                    showToast("Wiadomość została zgłoszona");
+                } else if (response.status === 429) {
+                    showToast("Już zgłosiłeś tą wiadomość.");
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        async function loadNewestMessages(conversationId) {
+            userTypingLabel.textContent = '';
+            messagesDiv.innerHTML = '';
+            hasMoreMessages = true;
+            const response = await authFetch(`/api/Conversations/${conversationId}`);
+            if (!response.ok) return;
+            const messages = await response.json();
+            messages.forEach(m => addMessage(m, { addToTop: true }));
+
+            if (messages.length > 0) { oldestMessageId = messages[messages.length - 1].id; }
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => { messagesDiv.scrollTop = messagesDiv.scrollHeight; });
+            });
+        }
+
+        async function loadOlderMessages() {
+            if (isLoadingOlder || !hasMoreMessages || !oldestMessageId) return;
+            isLoadingOlder = true;
+            const res = await authFetch(`/api/Conversations/${currentConversationId}?beforeMessageId=${oldestMessageId}`);
+
+            if (!res.ok) { isLoadingOlder = false; return; }
+            const messages = await res.json();
+            if (messages.length === 0) { hasMoreMessages = false; isLoadingOlder = false; return; }
+
+            messages.forEach(m => addMessage(m, { addToTop: true }));
+            oldestMessageId = messages[messages.length - 1].id;
+            isLoadingOlder = false;
+        }
+
+        async function openChat(userName, conversationId) {
+            if (window.innerWidth <= 768) {
+                document.getElementById("right-sidebar").classList.remove("active");
+                const btn = document.getElementById("toggleFriendsMobileBtn");
+                if (btn) btn.innerHTML = "ZNAJOMI";
+            }
+            const chatTitle = document.getElementById('chatTitle');
+            chatTitle.innerText = `CZAT: ${userName.toUpperCase()}`;
+
+            const view = conversationViews.get(conversationId);
+            if (view) {
+                const isActive = view.data.friend.isActive;
+                chatTitle.style.setProperty('--status-color', isActive ? 'var(--neon-green)' : 'var(--neon-red)');
+            }
+
+            if (!connection || connection.state !== signalR.HubConnectionState.Connected) return;
+
+            if (currentConversationId && currentConversationId !== conversationId) {
+                try { await connection.invoke("LeaveConversation", currentConversationId); } catch (err) { console.warn(err); }
+            }
+
+            currentConversationId = conversationId;
+            document.getElementById('chatWindow').style.display = 'flex';
+            messagesDiv.innerHTML = "";
+
+            clearSelectedFile();
+
+            if (observer) { observer.disconnect(); observer = null; }
+            if (topSentinel) { topSentinel.remove(); topSentinel = null; }
+
+            await loadNewestMessages(conversationId);
+            topSentinel = document.createElement("div");
+            topSentinel.style.height = "1px";
+            messagesDiv.prepend(topSentinel);
+
+            observer = new IntersectionObserver(async (entries) => {
+                const entry = entries[0];
+                if (!entry.isIntersecting) return;
+                if (isLoadingOlder || !hasMoreMessages || !oldestMessageId) {
+                    observer.disconnect();
+                    if (topSentinel) topSentinel.remove();
+                    return;
+                }
+
+                if (topSentinel) { observer.unobserve(topSentinel); topSentinel.remove(); topSentinel = null; }
+                await loadOlderMessages();
+                topSentinel = document.createElement("div");
+                topSentinel.style.height = "1px";
+                messagesDiv.prepend(topSentinel);
+                observer.observe(topSentinel);
+            }, { root: messagesDiv, threshold: 0.1, rootMargin: "100px 0px 0px 0px" });
+
+            observer.observe(topSentinel);
+            try { await connection.invoke("JoinConversation", conversationId); } catch (err) { console.error(err); }
+        }
+
+        async function closeChat() {
+            if (connection && currentConversationId) {
+                try { await connection.invoke("LeaveConversation", currentConversationId); } catch (err) { console.warn(err); }
+            }
+            currentConversationId = null;
+            messagesDiv.innerHTML = "";
+            document.getElementById('chatWindow').style.display = 'none';
+        }
+
+        function clearSelectedFile() {
+            const clearFileBtn = document.getElementById('clearFileBtn');
+            const attachBtn = document.getElementById('attachBtn');
+            pendingAttachment = null;
+            attachmentFile.value = '';
+            clearFileBtn.classList.add('hidden');
+            attachBtn.classList.remove('has-file');
+        }
+
+        messageInput.addEventListener("keydown", async (e) => {
+            if (e.key !== "Enter") return;
+            const text = messageInput.value.trim();
+            if (!text && !pendingAttachment) return;
+            if (!currentConversationId) return;
+
+            const incomingMessage = new FormData();
+            incomingMessage.append("conversationId", currentConversationId);
+            if (text) incomingMessage.append("content", text);
+            if (pendingAttachment) incomingMessage.append("file", pendingAttachment);
+            incomingMessage.append("connectionId", connection.connectionId);
+            clearSelectedFile();
+
+            try {
+                await authFetch(`/api/Conversations/${currentConversationId}`, { method: 'POST', body: incomingMessage });
+                messageInput.value = "";
+                messagesDiv.scrollTo({ top: messagesDiv.scrollHeight, behavior: 'smooth' });
+            } catch (err) { console.error(err); }
+        });
+
+        messageInput.addEventListener("input", async () => {
+            if (!connection || connection.state !== signalR.HubConnectionState.Connected) return;
+            if (!currentConversationId) return;
+            try { await connection.invoke("UserTyping", currentConversationId); } catch (err) { console.warn(err); }
+        });
+
+        attachmentFile.addEventListener("change", (e) => {
+            const clearFileBtn = document.getElementById('clearFileBtn');
+            const attachBtn = document.getElementById('attachBtn');
+
+            pendingAttachment = e.target.files[0];
+            if (pendingAttachment !== null) {
+                clearFileBtn.classList.remove('hidden');
+                attachBtn.classList.add('has-file');
+                clearFileBtn.classList.add('has-file');
+            } else {
+                clearSelectedFile();
+            }
+        });
+
+        document.getElementById('clearFileBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+            clearSelectedFile();
+        });
+
+        async function logout() {
+            try {
+                await authFetch("/api/logout", { method: "POST" });
+                localStorage.clear();
+                window.location.href = "index.html";
+            } catch (err) { window.location.href = "index.html"; }
+        }
+
+        let selectedGame = null;
+        const searchBarDiv = document.getElementById("gameSearch");
+        const resultsListDiv = document.getElementById("searchResults");
+
+        const sbOverlay = document.getElementById("sbMenuOverlay");
+        const sbTitle = document.getElementById("sbMainMenuTitle");
+        const sbPoster = document.getElementById("sbMenuArt");
+        const sbEntriesList = document.getElementById("sbEntriesList");
+        const sbMainMenuToggleConversationsButton = document.getElementById("sbMainMenuToggleConversationsButton");
+        const sbMainMenuToggleFavouriteButton = document.getElementById("sbMainMenuToggleFavouriteButton");
+        const sbMainMenuView = document.getElementById("sbMainMenuView");
+        const sbEntriesListView = document.getElementById("sbEntriesListView");
+        const sbEntryCreatorView = document.getElementById("sbEntryCreatorView");
+        const sbMenu = document.getElementById("sbMenu");
+        const sbMenuArt = document.getElementById("sbMenuArt");
+
+        sbOverlay.addEventListener("click", closeSearchBarMenu);
+        sbMenu.addEventListener("click", e => e.stopPropagation());
+        sbMainMenuToggleConversationsButton.addEventListener('click', async () => { await toggleGroupConversationsVisibility(); });
+        sbMainMenuToggleFavouriteButton.addEventListener('click', async () => { await toggleGroupConversationsFavourity(); });
+
+        document.getElementById("sbMenuCloseButton").onclick = closeSearchBarMenu;
+        document.getElementById("sbBackButton").onclick = () => showView(sbMainMenuView);
+
+        let timeout = null;
+        searchBarDiv.addEventListener("input", () => {
+            const query = searchBarDiv.value.trim();
+            clearTimeout(timeout);
+
+            if (query.length < 2) {
+                resultsListDiv.innerHTML = `<div class="search-placeholder-container"><p>Na którą grę masz dziś ochotę?</p></div>`;
+                resultsListDiv.style.display = "block";
+                return;
+            }
+            timeout = setTimeout(() => { searchGames(query); }, 600);
+        });
+
+        async function searchGames(query) {
+            if (!query || query.trim().length === 0) return;
+            try {
+                const res = await authFetch(`/api/Matchmaking/Games/Search?query=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                renderSearchBarResults(data);
+            } catch (e) { console.error(e); }
+        }
+
+        function renderSearchBarResults(games) {
+            resultsListDiv.innerHTML = "";
+            if (games.length === 0) {
+                resultsListDiv.innerHTML = "<li style='padding:15px; color:#9ca3af; text-align:center;'>Brak wyników</li>";
+                resultsListDiv.style.display = "block";
+                return;
+            }
+            games.sort((a, b) => b.similarity - a.similarity);
+
+            games.forEach(game => {
+                const li = document.createElement("li");
+                const btn = document.createElement("button");
+
+                if (game.gridPath) {
+                    btn.style.backgroundImage = `url(${game.gridPath})`;
+                    btn.style.backgroundSize = "cover";
+                    btn.style.backgroundPosition = "center";
+                }
+
+                btn.innerHTML = `
+                    <div class="bg-overlay"></div>
+                    <div class="content">
+                        <img src="${game.iconPath}" alt="">
+                        <span class="game-name">${game.name}</span>
+                    </div>
+                `;
+
+                btn.addEventListener("click", () => {
+                    selectGame(game);
+                    resultsListDiv.style.display = "none";
+                });
+                li.appendChild(btn);
+                resultsListDiv.appendChild(li);
+            });
+            resultsListDiv.style.display = "block";
+        }
+
+        async function selectGame(game) {
+            searchBarDiv.value = "";
+            resultsListDiv.style.display = "none";
+            resultsListDiv.innerHTML = "";
+
+            sbOverlay.classList.remove("hidden");
+            sbTitle.textContent = game.name;
+
+            const isMobile = window.innerWidth <= 768;
+            const selectedArtPath = isMobile ? game.gridPath : game.posterPath;
+
+            if (!selectedArtPath) {
+                sbMenuArt.style.display = "none";
+                sbMenu.classList.add("no-art");
+            } else {
+                sbMenuArt.style.display = "block";
+                sbMenu.classList.remove("no-art");
+                sbPoster.style.backgroundImage = `url(${selectedArtPath})`;
+            }
+            selectedGame = game;
+            showView(sbMainMenuView);
+        }
+
+        async function toggleGroupConversationsVisibility() {
+            if (selectedGame === null || selectedGame.id === null) return;
+            if (!locationPermission) {
+                showToast("Funkcja wyłączona z powodu braku dostępu do lokalizacji");
+                return;
+            }
+            let data = null;
+            try {
+                const response = await authFetch(`/api/Conversations/Group?gameName=${encodeURIComponent(selectedGame.name)}`);
+                if (!response.ok) return;
+                data = await response.json();
+            } catch (e) { console.error(e); }
+            if (data && data.conversations !== null) addOrRemoveGroupConversationMapMarkers(data.conversations, { forceUpdate: false });
+        }
+
+        async function getFavouriteConversations() {
+            let data = null;
+            try {
+                const response = await authFetch(`/api/Conversations/Group/Favourite`);
+                if (!response.ok) return;
+                data = await response.json();
+            } catch (e) { console.error(e); }
+            if (data && data.length > 0) addOrRemoveGroupConversationMapMarkers(data, { forceUpdate: false });
+        }
+
+        async function toggleGroupConversationsFavourity() {
+            if (!locationPermission) {
+                showToast("Funkcja wyłączona z powodu braku dostępu do lokalizacji");
+                return;
+            }
+            if (selectedGame === null || selectedGame.id === null) return;
+            let data = null;
+            try {
+                const response = await authFetch(`/api/Conversations/Group/Favourite?gameName=${encodeURIComponent(selectedGame.name)}`, { method: 'PATCH' });
+                if (!response.ok) return;
+                data = await response.json();
+            } catch (e) { console.error(e); }
+            if (!data || data.conversations === null) return;
+            if (data.addedToFavourite === true) addOrRemoveGroupConversationMapMarkers(data.response.conversations, { forceUpdate: true });
+            else addOrRemoveGroupConversationMapMarkers(data.response.conversations, { forceUpdate: false });
+        }
+
+        function addOrRemoveGroupConversationMapMarkers(conversationList, { forceUpdate = false } = {}) {
+            if (selectedGame && selectedGame.id && gamesMap.has(selectedGame.id) && forceUpdate === false) {
+                conversationList.forEach(c => {
+                    const marker = groupConversationMarkers.get(c.conversationId);
+                    if (marker) {
+                        groupConversationCluster.removeLayer(marker);
+                        groupConversationMarkers.delete(c.conversationId);
+                    }
+                });
+                gamesMap.delete(selectedGame.id);
+            } else {
+                conversationList.forEach(c => {
+                    updateMarker(c.conversationId, `${c.name} - ${c.locationName}`, c.iconPath, true, c.latitude, c.longitude, { isGroup: true });
+                    gamesMap.set(c.gameId, c);
+                });
+            }
+            closeSearchBarMenu();
+        }
+
+        document.addEventListener("click", (e) => {
+            if (!document.querySelector(".search-container").contains(e.target)) {
+                resultsListDiv.style.display = "none";
+            }
+        });
+
+        function showView(view) {
+            const views = [sbMainMenuView, sbEntriesListView, sbEntryCreatorView];
+            views.forEach(v => v.classList.add("hidden"));
+            view.classList.remove("hidden");
+            if (view === sbEntriesListView || view === sbEntryCreatorView) document.getElementById("sbBackButton").classList.remove("hidden");
+            else document.getElementById("sbBackButton").classList.add("hidden");
+        }
+
+        function closeSearchBarMenu() { sbOverlay.classList.add("hidden"); }
+
+        document.getElementById("sbMainMenuEntryCreatorButton").addEventListener("click", () => {
+            if (!locationPermission) {
+                showToast("Funkcja wyłączona z powodu braku dostępu do lokalizacji");
+                return;
+            }
+            document.getElementById("sbEntryCreatorGameName").innerText = selectedGame.name;
+            const icon = document.getElementById("sbEntryCreatorGameIcon");
+            icon.style.backgroundImage = `url(${selectedGame.iconPath})`;
+            showView(sbEntryCreatorView);
+        });
+
+        document.getElementById("sbMainMenuEntriesListButton").onclick = async () => {
+            if (!locationPermission) {
+                showToast("Funkcja wyłączona z powodu braku dostępu do lokalizacji");
+                return;
+            }
+            showView(sbEntriesListView);
+            if (!selectedGame?.id) return;
+            try {
+                const res = await authFetch(`/api/Matchmaking/Entries/List/${selectedGame.id}`);
+                const entries = await res.json();
+                sbEntriesList.innerHTML = "";
+
+                const emptyMessage = document.getElementById("sbEntriesEmptyMessage");
+                const listContainer = document.getElementById("sbEntriesList");
+                if (!entries || entries.length === 0) {
+                    emptyMessage.classList.remove("hidden");
+                    listContainer.classList.add("hidden");
+                } else {
+                    emptyMessage.classList.add("hidden");
+                    listContainer.classList.remove("hidden");
+
+                    for (const item of entries) {
+                        const expiryTime = new Date(item.expiringAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const creatorAvatar = await getAvatar(item.creator);
+                        const li = document.createElement("li");
+                        li.className = "entry-card";
+                        li.innerHTML = `
+                            <div class="entry-top-bar">
+                                <div class="entry-game-tag"></div>
+                                <div class="entry-expiry"></div>
+                            </div>
+                            <div class="entry-header">
+                                <div class="entry-user-info">
+                                    <div class="entry-avatar"></div>
+                                    <div class="entry-user-meta">
+                                        <div class="entry-user"></div>
+                                        <button class="profile-btn">Zobacz profil</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="entry-description"></div>
+                            <div class="entry-footer">
+                                <div class="footer-left"><button class="expand-btn">Rozwiń</button></div>
+                                <div class="footer-right"><button class="join-btn">Dołącz</button></div>
+                            </div>
+                        `;
+
+                        li.querySelector(".entry-game-tag").textContent = item.game.name;
+                        li.querySelector(".entry-expiry").textContent = `Wygasa o: ${expiryTime}`;
+                        li.querySelector(".entry-user").textContent = item.creator.userName;
+                        li.querySelector(".entry-description").textContent = item.description || "Użytkownik nie dodał żadnego opisu";
+                        li.querySelector(".entry-avatar").style.backgroundImage = `url('${creatorAvatar}')`;
+
+                        li.querySelector(".join-btn").addEventListener("click", async () => {
+                            closeSearchBarMenu();
+                            try {
+                                const response = await fetch(`api/Matchmaking/Entries/Join/${item.matchId}`, { method: "PATCH" });
+                                if (!response.ok) showToast("Coś poszło nie tak.");
+                            } catch (err) { console.error(err); }
+                        });
+
+                        li.querySelector(".profile-btn").addEventListener("click", () => {
+                            window.location.href = `/profil.html?id=${item.creator.id}`;
+                        });
+
+                        const description = li.querySelector(".entry-description");
+                        const expandBtn = li.querySelector(".expand-btn");
+
+                        requestAnimationFrame(() => {
+                            const isOverflowing = description.scrollHeight > description.clientHeight + 1;
+
+                            if (!isOverflowing) {
+                                expandBtn.style.display = "none";
+                            }
+                        });
+
+                        expandBtn.addEventListener("click", () => {
+                            description.classList.toggle("expanded");
+                            expandBtn.textContent = description.classList.contains("expanded") ? "Zwiń" : "Rozwiń";
+                        });
+                        listContainer.appendChild(li);
+                    }
+                }
+            } catch (err) { console.error(err); }
+        };
+
+        document.getElementById("sbEntryCreatorAutoButton").onclick = async () => { await createEntry("Auto"); }
+        document.getElementById("sbEntryCreatorManualButton").onclick = async () => { await createEntry("Manual"); }
+
+        async function createEntry(type) {
+            if (selectedGame?.id === null) return;
+            const entry = {
+                gameId: selectedGame.id,
+                description: document.getElementById("sbEntryCreatorDescription").value,
+                type: type
+            };
+
+            try {
+                let data = null;
+                const response = await authFetch(`/api/Matchmaking/Entries/JoinOrCreate`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(entry)
+                });
+                if (!response.ok) { showToast("Coś poszło nie tak."); return; }
+                if (response.status === 200) data = await response.json();
+                if (data) {
+                    myMatch = data;
+                    setMatchmakingTimerUI(data.status, data.expiringAt);
+                }
+            } catch (e) { console.error(e); } finally { closeSearchBarMenu(); }
+        }
+
+        async function togglePendingList() {
+            const dropdown = document.getElementById("pendingDropdown");
+            if (!dropdown) return;
+            dropdown.classList.toggle("hidden");
+
+            if (!dropdown.classList.contains("hidden")) {
+                dropdown.innerHTML = '<div style="padding:10px; color:gray; font-size:11px;">Ładowanie zaproszeń...</div>';
+                try {
+                    const res = await authFetch("/api/Friendships/Requests/Pending");
+                    if (!res.ok) throw new Error("Błąd serwera");
+
+                    const list = await res.json();
+                    dropdown.innerHTML = "";
+
+                    if (list.length === 0) {
+                        dropdown.innerHTML = '<div style="padding:15px; color:#64748b; font-size:11px; text-align:center;">Brak nowych powiadomień</div>';
+                        return;
+                    }
+
+                    list.forEach(u => {
+                        const card = document.createElement("div");
+                        card.className = "pending-card";
+                        card.innerHTML = `<div class="pending-name"></div><div class="pending-actions"></div>`;
+                        card.querySelector(".pending-name").textContent = u.userName;
+                        const actionsContainer = card.querySelector(".pending-actions");
+
+                        if (u.isIncoming) {
+                            const acceptBtn = document.createElement("button");
+                            acceptBtn.textContent = "AKCEPTUJ";
+                            acceptBtn.onclick = () => handleRequest(u.id, 'Accept');
+
+                            const rejectBtn = document.createElement("button");
+                            rejectBtn.className = "reject";
+                            rejectBtn.textContent = "ODRZUĆ";
+                            rejectBtn.onclick = () => handleRequest(u.id, 'Cancel');
+
+                            actionsContainer.appendChild(acceptBtn);
+                            actionsContainer.appendChild(rejectBtn);
+                        } else {
+                            const cancelBtn = document.createElement("button");
+                            cancelBtn.className = "reject";
+                            cancelBtn.textContent = "ANULUJ";
+                            cancelBtn.onclick = () => handleRequest(u.id, 'Cancel');
+                            actionsContainer.appendChild(cancelBtn);
+                        }
+                        dropdown.appendChild(card);
+                    });
+                } catch (err) {
+                    dropdown.innerHTML = `<div style="padding:10px; color:#f87171; font-size:10px;">Błąd ładowania danych</div>`;
+                }
+            }
+        }
+
+        async function handleRequest(userId, action) {
+            try {
+                const method = action === 'Accept' ? 'PATCH' : 'DELETE';
+                const res = await authFetch(`/api/Friendships/Requests/${action}`, {
+                    method: method,
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(userId)
+                });
+
+                if (res.ok) {
+                    const dropdown = document.getElementById("pendingDropdown");
+                    dropdown.classList.add("hidden");
+                    togglePendingList();
+                    if (typeof loadData === "function") await loadData();
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        const searchOptionsMap = {
+            "search-hobby": [
+                "Gry komputerowe",
+                "Gry mobilne",
+                "Esport",
+                "Programowanie",
+                "Tworzenie gier",
+                "AI",
+                "Cyberbezpieczeństwo",
+                "Hardware PC",
+                "VR / AR",
+                "Streaming",
+
+                "Siłownia",
+                "Bieganie",
+                "Pływanie",
+                "Jazda na rowerze",
+                "Piłka nożna",
+                "Koszykówka",
+                "Siatkówka",
+                "Sztuki walki",
+                "Crossfit",
+                "Yoga",
+
+                "Podróże",
+                "Hiking",
+                "Kemping",
+                "Survival",
+                "Wspinaczka",
+                "Nurkowanie",
+                "Surfing",
+                "Snowboard",
+                "Narciarstwo",
+                "Skateboarding",
+
+                "Rysowanie",
+                "Malarstwo",
+                "Fotografia",
+                "Grafika komputerowa",
+                "UI/UX",
+                "Pisanie",
+                "Poezja",
+                "Blogowanie",
+                "Tworzenie filmów",
+                "Edycja video",
+
+                "Słuchanie muzyki",
+                "Gitara",
+                "Pianino",
+                "Produkcja muzyki",
+                "DJ",
+                "Śpiewanie",
+                "Rap",
+                "Koncerty",
+                "Winyle",
+                "Beatmaking",
+
+                "Gotowanie",
+                "Pieczenie",
+                "Grillowanie",
+                "Street food",
+                "Dietetyka",
+                "Zdrowe jedzenie",
+                "Kawa",
+                "Herbata",
+                "Kuchnie świata",
+                "Food blogging",
+
+                "Filmy",
+                "Seriale",
+                "Anime",
+                "Manga",
+                "YouTube",
+                "TikTok",
+                "Podcasty",
+                "Stand-up",
+                "Teatr",
+                "Książki",
+
+                "Języki obce",
+                "Psychologia",
+                "Filozofia",
+                "Rozwój osobisty",
+                "Medytacja",
+                "Mindfulness",
+                "Historia",
+                "Nauka",
+                "Artykuły",
+                "Kursy online",
+
+                "Planszówki",
+                "Szachy",
+                "RPG",
+                "Warhammer",
+                "Komiksy",
+                "Kolekcjonowanie",
+                "Lego",
+                "Escape roomy",
+                "Quizy",
+                "Puzzle",
+
+                "Motoryzacja",
+                "Motocykle",
+                "Samochody",
+                "Moda",
+                "Fitness lifestyle",
+                "Social media",
+                "Networking",
+                "Wolontariat",
+                "Zwierzęta",
+                "DIY",
+                "Ogrodnictwo"
+            ],
+            "search-games": [
+                "FPS (First Person Shooter)",
+                "TPS (Third Person Shooter)",
+                "Battle Royale",
+                "MMO",
+                "MMORPG",
+                "RPG",
+                "Roguelike",
+
+                "Strategie czasu rzeczywistego (RTS)",
+                "Strategie turowe",
+                "Tower Defense",
+                "MOBA",
+
+                "Platformówki",
+                "Sandbox",
+                "Open World",
+                "Survival",
+
+                "Horror",
+                "Psychological Horror",
+                "Stealth",
+                "Action-Adventure",
+                "Hack & Slash",
+
+                "Symulatory",
+                "Looter Shooter",
+
+                "Wyścigowe",
+                "Sportowe",
+                "Gry muzyczne / rytmiczne",
+
+                "Indie",
+                "Retro",
+
+                "PvP",
+                "PvE",
+                "Historyczne",
+
+                "Anime styl",
+                "City Builder",
+            ],
+            "search-music": [
+                "Pop",
+
+                "Rock",
+                "Hard Rock",
+                "Classic Rock",
+                "Alternative Rock",
+
+                "Metal",
+                "Heavy Metal",
+                "Thrash Metal",
+                "Death Metal",
+
+                "Rap",
+                "Hip Hop",
+                "Trap",
+                "Underground Rap",
+                "Lo-fi Hip Hop",
+
+                "R&B",
+                "Disco",
+
+                "Electronic",
+                "EDM",
+                "House",
+                "Deep House",
+                "Tech House",
+                "Progressive House",
+                "Electro House",
+                "Future House",
+                "Bass House",
+
+                "Techno",
+                "Dubstep",
+                "Drum and Bass",
+
+                "Hardstyle",
+                "Frenchcore",
+
+                "Chillout",
+                "Downtempo",
+                "Lo-fi",
+
+                "Jazz",
+                "Swing",
+                "Blues",
+
+                "Classical",
+
+                "Country",
+
+                "Reggae",
+
+                "Anime Music",
+                "Nightcore",
+                "Phonk",
+
+                "Soundtracks",
+                "Video Game OST",
+
+                "Polski Rap",
+                "Polski Trap",
+                "Polski Rock",
+                "Polski Pop",
+                "Disco Polo"
+            ]
+        };
+
+        const searchSelected = {
+            hobby: [],
+            games: [],
+            music: [],
+            favoriteGames: []
+        };
+
+        let favoriteGamesTimeout = null;
+
+        document.querySelectorAll('#advancedFilters .multi-select').forEach(container => {
+            const type = container.dataset.type;
+            const shortType = type.replace("search-", "");
+            const input = container.querySelector("input");
+            const dropdown = container.querySelector(".dropdown");
+            const selectedContainer = container.querySelector(".selected-container");
+
+            container.insertBefore(input, selectedContainer);
+
+            function buildDropdownItems(itemsList) {
+                dropdown.innerHTML = "";
+
+                if (itemsList.length === 0) {
+                    dropdown.classList.add("hidden");
+                    return;
+                }
+
+                dropdown.classList.remove("hidden");
+
+                itemsList.forEach(x => {
+                    const div = document.createElement("div");
+                    div.textContent = x;
+                    div.onclick = (e) => {
+                        e.stopPropagation();
+
+                        if (!searchSelected[shortType].includes(x)) {
+                            searchSelected[shortType].push(x);
+                        }
+
+                        input.value = "";
+                        dropdown.classList.add("hidden");
+                        renderSelected();
+                    };
+                    dropdown.appendChild(div);
+                });
+            }
+
+            function renderList(filter = "") {
+                if (type === "search-favoriteGames") {
+                    clearTimeout(favoriteGamesTimeout);
+
+                    const query = filter.trim();
+                    if (query.length < 2) {
+                        dropdown.innerHTML = "";
+                        dropdown.classList.add("hidden");
+                        return;
+                    }
+
+                    favoriteGamesTimeout = setTimeout(async () => {
+                        try {
+                            const token = localStorage.getItem("token");
+                            const response = await authFetch(`/api/Matchmaking/Games/Search?query=${encodeURIComponent(query)}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Authorization': token ? `Bearer ${token}` : ''
+                                }
+                            });
+
+                            if (!response.ok) {
+                                console.error("Serwer zwrócił kod błędu:", response.status);
+                                throw new Error("Błąd pobierania gier.");
+                            }
+
+                            const games = await response.json();
+
+                            const gameNames = (games || [])
+                                .map(g => g.name || g.Name || "")
+                                .filter(name => name !== "" && !searchSelected.favoriteGames.includes(name));
+
+                            buildDropdownItems(gameNames);
+
+                        } catch (error) {
+                            console.error("Wystąpił wyjątek podczas komunikacji z API:", error);
+                        }
+                    }, 300);
+
+                } else {
+                    const filtered = (searchOptionsMap[type] || [])
+                        .filter(x => x.toLowerCase().includes(filter.toLowerCase()) && !searchSelected[shortType].includes(x));
+
+                    buildDropdownItems(filtered);
+                }
+            }
+
+            function renderSelected() {
+                selectedContainer.innerHTML = "";
+                searchSelected[shortType].forEach(x => {
+                    const tag = document.createElement("div");
+                    tag.className = "tag";
+                    tag.textContent = x;
+
+                    const removeBtn = document.createElement("span");
+                    removeBtn.className = "remove-btn";
+                    removeBtn.textContent = " ×";
+                    removeBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        searchSelected[shortType] = searchSelected[shortType].filter(v => v !== x);
+                        renderSelected();
+                        if (!dropdown.classList.contains("hidden")) {
+                            renderList(input.value);
+                        }
+                    };
+
+                    tag.appendChild(removeBtn);
+                    selectedContainer.appendChild(tag);
+                });
+            }
+
+            input.addEventListener("focus", (e) => {
+                document.querySelectorAll("#advancedFilters .dropdown").forEach(d => {
+                    if (d !== dropdown) d.classList.add("hidden");
+                });
+
+                if (type === "search-favoriteGames" && e.target.value.trim().length < 2) {
+                    dropdown.classList.add("hidden");
+                    return;
+                }
+
+                dropdown.classList.remove("hidden");
+                renderList(input.value);
+            });
+
+            input.addEventListener("input", e => {
+                renderList(e.target.value);
+            });
+
+            container.addEventListener("click", e => {
+                e.stopPropagation();
+            });
+
+            renderSelected();
+        });
+
+        document.addEventListener("click", () => {
+            document.querySelectorAll("#advancedFilters .dropdown").forEach(d => d.classList.add("hidden"));
+        });
+
+       window.onload = async () => {
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            await sleep(800);
+
+            overlay.classList.add("fade-out");
+            setTimeout(() => { overlay.classList.add("hidden"); }, 400);
+
+            try {
+                const whoRes = await authFetch("/api/Profile/whoami");
+                if (!whoRes.ok) return;
+
+                const me = await whoRes.json();
+                myId = me.id;
+
+                locationPermission = await checkLocationPermission();
+                if (locationPermission) await requestLocation();
+
+                const meResponse = await authFetch("/api/profile");
+                if (meResponse.ok) {
+                    const meProfile = await meResponse.json();
+                    const navAvatarUrl = await getAvatar(meProfile, 100);
+                    document.getElementById("nav-user-name").textContent = meProfile.userName;
+                    document.getElementById("nav-user-avatar").style.backgroundImage = `url('${navAvatarUrl}')`;
+                }
+                await setupSignalRConnection();
+                loadData();
+            } catch (error) {
+                console.warn("Offline.", error);
+            }
+        };
+
+        document.getElementById("emojiPickerBtn").addEventListener("click", (e) => {
+            e.stopPropagation();
+            document.getElementById("emojiPicker").classList.toggle("hidden");
+        });
+
+        function addEmoji(emoji) {
+            const input = document.getElementById("messageInput");
+            input.value += emoji;
+            input.focus();
+            document.getElementById("emojiPicker").classList.add("hidden");
+        }
+
+        document.addEventListener("click", () => {
+            document.getElementById("emojiPicker").classList.add("hidden");
+        });
+
+
+        const mmOverlay = document.getElementById("mmOverlay");
+        let myMatch = null;
+        let matchmakingTimerInterval = null;
+        let matchmakingExpiringAt = null;
+
+        document.getElementById("navMMActionButton").addEventListener("click", async () => await cancelOrRejectEntry(myMatch));
+        document.getElementById("mmWindowAcceptButton").addEventListener("click", async () => await acceptEntry(myMatch));
+        document.getElementById("mmWindowRejectButton").addEventListener("click", async () => await cancelOrRejectEntry(myMatch));
+        document.getElementById("mmWindowShowProfileButton").addEventListener("click", () => {
+            window.location.href = `/profil.html?id=${myMatch.user.id}`;
+        });
+        
+        async function getMyEntries() {
+            let data = null;
+            try {
+                const response = await authFetch(`/api/Matchmaking/Entries/My`);
+                if (!response.ok || response.status === 204) return;
+                data = await response.json();
+            } catch (e) { console.error(e); }
+            if (!data) return;
+            myMatch = data;
+            setMatchmakingTimerUI(myMatch.status, myMatch.expiringAt);
+
+            if (myMatch.status === "Pending") { await showMatchmakingWindow(myMatch); }
+        }
+
+        function setMatchmakingTimerUI(state, expiringAt) {
+            const timerUI = document.getElementById("navMMStatus");
+            const actionButton = document.getElementById("navMMActionButton");
+            const stateText = document.getElementById("navMMStateText");
+
+            if (!state || !['Searching', 'Pending', 'Accepted'].includes(state)) {
+                timerUI.classList.add("hidden");
+                stopMatchmakingTimer();
+                return;
+            }
+
+            timerUI.classList.remove("hidden");
+            setMatchmakingTimer(expiringAt);
+
+            switch (state) {
+                case "Searching":
+                    stateText.textContent = " - wyszukiwanie";
+                    break;
+                case "Pending":
+                    stateText.textContent = " - oczekiwanie na akceptację";
+                    break;
+                case "Accepted":
+                    stateText.textContent = " - oczekiwanie na akceptację drugiej osoby";
+                    break;
+            }
+        }
+
+        function setMatchmakingTimer(expiringAt) {
+            matchmakingExpiringAt = new Date(expiringAt).getTime();  
+            if (matchmakingTimerInterval) return;
+            updateMatchmakingTimer();
+            matchmakingTimerInterval = setInterval(() => { updateMatchmakingTimer(); }, 1000);
+        }
+
+        function stopMatchmakingTimer() {
+            if (matchmakingTimerInterval) {
+                clearInterval(matchmakingTimerInterval);
+                matchmakingTimerInterval = null;
+                myMatch = null;
+            }
+        }
+
+        function updateMatchmakingTimer() {
+            const timer = document.getElementById("navMMTimer");
+            const now = Date.now();
+            let remaining = Math.max(0, matchmakingExpiringAt - now);
+            const totalSeconds = Math.floor(remaining / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+
+            timer.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+            if (remaining <= 0) {
+                stopMatchmakingTimer();
+                setMatchmakingTimerUI("None", null);
+            }
+        }
+
+        async function showMatchmakingWindow(myMatch) {
+            if (!myMatch) return;
+            const imageDiv = document.getElementById("mmWindowProfileImage");
+            const userNameDiv = document.getElementById("mmWindowUserName");
+            const descriptionDiv = document.getElementById("mmWindowDescription");
+            const gameNameDiv = document.getElementById("mmWindowGameName");
+            const gameIconImg = document.getElementById("mmWindowGameIcon");
+
+            const avatar = await getAvatar(myMatch.user, 600);
+            imageDiv.src = avatar;
+            userNameDiv.textContent = myMatch.user.userName;
+            descriptionDiv.textContent = myMatch.description || "Użytkownik nie dodał żadnego opisu";
+            gameNameDiv.textContent = myMatch.game.name;
+            gameIconImg.src = myMatch.game.iconPath;
+            document.getElementById("mmOverlay").classList.remove("hidden");
+        }
+
+        function hideMatchmakingWindow() { mmOverlay.classList.add("hidden"); }
+
+        async function cancelOrRejectEntry(myMatch) {
+            if (!myMatch?.matchId) return;
+            try {
+                const response = await authFetch(`/api/Matchmaking/Entries/Reject/${myMatch.matchId}`, { method: "DELETE" });
+                if (!response.ok) { hideMatchmakingWindow(); return; }
+                if (response.status === 204) return setMatchmakingTimerUI("None", null);
+                const data = await response.json();
+                setMatchmakingTimerUI(data.status, data.expiringAt);
+            } catch (e) { hideMatchmakingWindow(); } finally { mmOverlay.classList.add("hidden"); }
+        }
+
+        async function acceptEntry(myMatch) {
+            if (!myMatch?.matchId) return;
+            try {
+                const response = await authFetch(`/api/Matchmaking/Entries/Accept/${myMatch.matchId}`, { method: "PATCH" });
+                if (!response.ok) { hideMatchmakingWindow(); return; }
+                const text = await response.text();
+                if (text.includes("oczekiwanie")) { setMatchmakingTimerUI("Accepted", myMatch.expiringAt); }
+            } catch (e) { hideMatchmakingWindow(); } finally { mmOverlay.classList.add("hidden"); }
+        }
+            
+        function openSearchModal() { document.getElementById("searchModal").classList.remove("hidden"); }
+        function closeSearchModal() { document.getElementById("searchModal").classList.add("hidden"); }
+
+        document.getElementById("searchRange").addEventListener("input", e => {
+            document.getElementById("rangeValue").textContent = e.target.value;
+        });
+
+        let searchCircle = null;
+        function createSearchCircle(lat, lng, radiusKm) {
+            if (searchCircle) { map.removeLayer(searchCircle); }
+            searchCircle = L.circle([lat, lng], {
+                radius: radiusKm * 1000,
+                color: '#4ade80',
+                weight: 3,
+                fillColor: '#4ade80',
+                fillOpacity: 0.08,
+                className: 'search-pulse-circle'
+            }).addTo(map);
+        }
+
+        async function startSearch() {
+            if (!locationPermission) {
+                showToast("Funkcja wyłączona z powodu braku dostępu do lokalizacji");
+                return;
+            }
+            searching = true;
+            closeSearchModal();
+            const range = Number(document.getElementById("searchRange").value);
+            const similar = document.getElementById("similarToMe").checked;
+            const gender = document.getElementById("searchGender").value?.trim() || null;
+            const alcohol = document.getElementById("searchAlcohol").value?.trim() || null;
+            const smoking = document.getElementById("searchSmoking").value?.trim() || null;
+
+            createSearchCircle(myLatitude, myLongitude, range);
+
+            Object.values(searchUserMarkers).forEach(marker => {
+                userCluster.removeLayer(marker);
+            });
+            searchUserMarkers.clear();
+
+            const response = await authFetch('/api/Search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    rangeKm: range,
+                    similarToMe: similar,
+                    hobby: searchSelected.hobby,
+                    games: searchSelected.games,
+                    music: searchSelected.music,
+                    favoriteGames: searchSelected.favoriteGames,
+                    gender, alcohol, smoking
+                })
+            });
+
+            if (!response.ok) { showToast("Błąd wyszukiwania"); return; }
+            const users = await response.json();
+
+            for (const user of users) {
+                const foundValue = Array.from(conversationViews.values()).find(v => v.data.friend.id === user.id) ?? null;
+                if (foundValue !== null) continue;
+
+                const avatar = await getAvatar(user, 100);
+                const borderColor = user.isActive ? '#4ade80' : '#f87171';
+                const icon = L.divIcon({
+                    className: 'custom-m',
+                    html: `
+                        <div class="user-marker circle"
+                             style="
+                                background-image:url('${avatar}');
+                                background-size:cover;
+                                background-position:center;
+                                border-color: ${borderColor};
+                                box-shadow:0 0 15px ${borderColor};
+                             ">
+                        </div>
+                        `,
+                    iconSize: [44, 44],
+                    iconAnchor: [22, 22]
+                });
+
+                const marker = L.marker([user.latitude, user.longitude], { icon }).bindTooltip(`
+                    <div class="tooltip-title">${user.userName}</div>
+                    <div class="tooltip-distance">${user.distance} km stąd</div>
+                `, {
+                    direction: 'top',
+                    offset: [0, -20],
+                    className: 'custom-map-tooltip', // Twoja własna klasa do stylizowania
+                    opacity: 1 // Gwarantuje pełną widoczność po najechaniu
+                });
+
+                marker.on('click', () => {
+                    map.flyTo([user.latitude, user.longitude], 15);
+                    window.location.href = `/profil.html?id=${user.id}`;
+                });
+
+                searchUserMarkers[user.id] = marker;
+                userCluster.addLayer(marker);
+            }
+        }
+        
+
+        function stopSearch() {
+            searching = false;
+            if (searchCircle) { map.removeLayer(searchCircle); searchCircle = null; }
+            Object.values(searchUserMarkers).forEach(marker => {
+                userCluster.removeLayer(marker);
+            });
+            searchUserMarkers.clear();
+
+            searchSelected.hobby = [];
+            searchSelected.games = [];
+            searchSelected.music = [];
+            searchSelected.favoriteGames = [];
+            document.querySelectorAll('#advancedFilters .selected-container').forEach(c => c.innerHTML = "");
+            document.getElementById("similarToMe").checked = false;
+            document.getElementById("searchRange").value = 30;
+            document.getElementById("rangeValue").textContent = 30;
+            document.getElementById("searchGender").value = "";
+            document.getElementById("searchAlcohol").value = "";
+            document.getElementById("searchSmoking").value = "";
+
+            showToast("Wyszukiwanie wyczyszczone");
+        }
+
+        function toggleFriendsSidebar() {
+            const sidebar = document.getElementById("right-sidebar");
+            sidebar.classList.toggle("active");
+            const btn = document.getElementById("toggleFriendsMobileBtn");
+            if (btn) {
+                if (sidebar.classList.contains("active")) {
+                    btn.innerHTML = "✕ ZAMKNIJ";
+                    btn.style.borderColor = "var(--neon-red)";
+                } else {
+                    btn.innerHTML = "ZNAJOMI";
+                    btn.style.borderColor = "var(--accent-purple)";
+                }
+            }
+        }
+
+        function toggleUserDropdown(event) {
+            event.stopPropagation();
+            document.getElementById("userDropdown").classList.toggle("hidden");
+        }
+
+        document.addEventListener("click", (e) => {
+            const container = document.getElementById("userMenuContainer");
+            const dropdown = document.getElementById("userDropdown");
+            if (container && !container.contains(e.target) && dropdown) {
+                dropdown.classList.add("hidden");
+            }
+        });
+
+    </script>
+</body>
+
+</html>

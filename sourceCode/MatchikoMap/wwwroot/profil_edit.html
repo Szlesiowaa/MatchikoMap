@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="/publicResources/favicon.ico">
+  <title>Edycja Profilu - MatchikoMap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      color: #e5e7eb;
+    }
+
+    .profile-container {
+      max-width: 1000px;
+      margin: 60px auto;
+      background: #020617;
+      border-radius: 16px;
+      box-shadow: 0 0 40px rgba(168, 85, 247, 0.45);
+      padding: 36px;
+      border: 1px solid #3d1b46;
+    }
+
+    h1 {
+      color: #a855f7;
+      text-align: center;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #a855f7;
+      margin: 35px 0 20px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-left: 3px solid #a855f7;
+      padding-left: 10px;
+    }
+
+    .form-main-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      background: #0f172a;
+      border: 1px solid #552269;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 250px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #a855f7;
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+    }
+
+    .avatar-edit-btn {
+      width: 100%;
+      padding: 12px;
+      background: #0f172a;
+      color: #a855f7;
+      border: 2px dashed #552269;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .avatar-edit-btn:hover {
+      background: rgba(168, 85, 247, 0.1);
+      border-color: #a855f7;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+    }
+
+    .interests-manager {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      background: #0b0f19;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 400px;
+    }
+
+    .interests-tabs {
+      background: #070a12;
+      border-right: 1px solid #1e293b;
+      padding: 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 14px 20px;
+      text-align: left;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+      border-left: 4px solid transparent;
+    }
+
+    .tab-btn:hover {
+      background: rgba(168, 85, 247, 0.05);
+      color: #e5e7eb;
+    }
+
+    .tab-btn.active {
+      background: rgba(168, 85, 247, 0.12);
+      color: #a855f7;
+      border-left-color: #a855f7;
+    }
+
+    .badge {
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      margin-left: 0.5rem;
+    }
+
+    .tab-btn.active .badge {
+      background: #a855f7;
+      color: #020617;
+    }
+
+    .interests-content {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+
+    .active-tags-zone {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px;
+      background: #020617;
+      border: 1px dashed #3d1b46;
+      border-radius: 8px;
+      min-height: 48px;
+      align-content: flex-start;
+    }
+
+    .tag {
+      background: linear-gradient(135deg, #2e1035, #592591);
+      border: 1px solid rgba(168, 85, 247, 0.5);
+      color: #f1edfa;
+      padding: 6px 10px 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.2s ease;
+    }
+
+    .tag .remove-btn {
+      cursor: pointer;
+      color: #a855f7;
+      font-weight: bold;
+      font-size: 14px;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+
+    .tag .remove-btn:hover {
+      color: #ff4a4a;
+    }
+
+    .available-chips-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      overflow-y: auto;
+      max-height: 220px;
+      padding-right: 4px;
+    }
+
+    .chip {
+      background: #111827;
+      border: 1px solid #374151;
+      color: #9ca3af;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .chip:hover {
+      border-color: #a855f7;
+      color: #fff;
+      background: rgba(168, 85, 247, 0.05);
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 15px;
+      margin-top: 40px;
+    }
+
+    .save-btn,
+    .cancel-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: 0.3s;
+    }
+
+    .save-btn {
+      background: #a855f7;
+      color: #020617;
+      border: none;
+    }
+
+    .save-btn:hover {
+      background: #c084fc;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.8);
+    }
+
+    .cancel-btn {
+      background: transparent;
+      color: #e5e7eb;
+      border: 1px solid #64748b;
+    }
+
+    .cancel-btn:hover {
+      background: #1e293b;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      .profile-container {
+        margin: 20px 10px;
+        padding: 20px;
+      }
+
+      .interests-manager {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .interests-tabs {
+        border-right: none;
+        border-bottom: 1px solid #1e293b;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 12px;
+        scrollbar-width: none;
+      }
+
+      .interests-tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .tab-btn {
+        white-space: nowrap;
+        padding: 10px 16px;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        border-radius: 6px;
+      }
+
+      .tab-btn.active {
+        border-bottom-color: #a855f7;
+        border-left-color: transparent;
+      }
+
+      .btn-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="profile-container">
+    <h1>Edytuj Profil</h1>
+
+    <form id="edit-form">
+      <div class="form-main-layout">
+        <div class="form-group">
+          <label>Zdjęcie profilowe</label>
+          <button type="button" class="avatar-edit-btn" onclick="window.location.href='zdjecie_profilowe.html'">
+            Zmień zdjęcie profilowe
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label for="input-name">Nazwa gracza</label>
+          <input type="text" id="input-name" placeholder="Twój nick..." required>
+        </div>
+
+        <div class="form-group">
+          <label for="input-tags">Ulubione gry / Tagi</label>
+          <input type="text" id="input-tags" placeholder="np. FPS • RPG • PvP">
+        </div>
+
+        <div class="form-group">
+          <label>Płeć</label>
+          <select id="gender">
+            <option value="" disabled selected hidden>Wybierz płeć</option>
+            <option>Mężczyzna</option>
+            <option>Kobieta</option>
+            <option>Inna</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+          <select id="status">
+            <option value="" disabled selected hidden>Wybierz status</option>
+            <option>Singiel</option>
+            <option>W związku</option>
+            <option>Żonaty/Zamężna</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Alkohol</label>
+          <select id="alcohol">
+            <option value="" disabled selected hidden>Wybierz</option>
+            <option>Nie piję</option>
+            <option>Okazjonalnie</option>
+            <option>Często</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Palenie</label>
+          <select id="smoking">
+            <option value="" disabled selected hidden>Wybierz</option>
+            <option>Nie palę</option>
+            <option>Okazjonalnie</option>
+            <option>Palę</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Intencje</label>
+          <select id="intent">
+            <option value="" disabled selected hidden>Wybierz</option>
+            <option>Do gry</option>
+            <option>Znajomość</option>
+            <option>Związek</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-title">Zarządzanie zainteresowaniami</div>
+
+      <div class="interests-manager">
+          <div class="interests-tabs" id="interestsTabsContainer">
+              <button type="button" class="tab-btn active" data-type="hobby">🎨 Hobby <span class="badge" id="badge-hobby">0</span></button>
+              <button type="button" class="tab-btn" data-type="favoriteGames">⭐ Ulubione gry <span class="badge" id="badge-favoriteGames">0</span></button>
+              <button type="button" class="tab-btn" data-type="games">🎮 Typy gier <span class="badge" id="badge-games">0</span></button>
+              <button type="button" class="tab-btn" data-type="music">🎵 Typ muzyki <span class="badge" id="badge-music">0</span></button>
+              <button type="button" class="tab-btn" data-type="books">📚 Typy książek <span class="badge" id="badge-books">0</span></button>
+              <button type="button" class="tab-btn" data-type="food">🍕 Jedzenie i napoje <span class="badge" id="badge-food">0</span></button>
+          </div>
+
+        <div class="interests-content">
+          <div class="search-wrapper">
+            <input type="text" id="globalInterestSearch" placeholder="Wyszukaj i filtruj dostępne preferencje...">
+          </div>
+
+          <label>Aktualnie wybrane w tej kategorii:</label>
+          <div class="active-tags-zone" id="activeTagsZone"></div>
+
+          <label>Dostępne do wyboru (Kliknij, aby dodać):</label>
+          <div class="available-chips-grid" id="availableChipsZone"></div>
+        </div>
+      </div>
+
+      <div class="form-group full-width" style="margin-top: 24px;">
+        <label for="input-desc">Opis profilu</label>
+        <textarea id="input-desc" placeholder="Napisz coś o sobie..."></textarea>
+      </div>
+
+      <div class="btn-container">
+        <a href="profil.html" class="cancel-btn">Anuluj</a>
+        <button type="submit" class="save-btn">Zapisz zmiany</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="./js/authFetch.js"></script>
+  <script>
+    const API_URL = '/api/Profile';
+
+    const optionsMap = {
+        hobby: [
+            "Gry komputerowe",
+            "Gry mobilne",
+            "Esport",
+            "Programowanie",
+            "Tworzenie gier",
+            "AI",
+            "Cyberbezpieczeństwo",
+            "Hardware PC",
+            "VR / AR",
+            "Streaming",
+
+            "Siłownia",
+            "Bieganie",
+            "Pływanie",
+            "Jazda na rowerze",
+            "Piłka nożna",
+            "Koszykówka",
+            "Siatkówka",
+            "Sztuki walki",
+            "Crossfit",
+            "Yoga",
+
+            "Podróże",
+            "Hiking",
+            "Kemping",
+            "Survival",
+            "Wspinaczka",
+            "Nurkowanie",
+            "Surfing",
+            "Snowboard",
+            "Narciarstwo",
+            "Skateboarding",
+
+            "Rysowanie",
+            "Malarstwo",
+            "Fotografia",
+            "Grafika komputerowa",
+            "UI/UX",
+            "Pisanie",
+            "Poezja",
+            "Blogowanie",
+            "Tworzenie filmów",
+            "Edycja video",
+
+            "Słuchanie muzyki",
+            "Gitara",
+            "Pianino",
+            "Produkcja muzyki",
+            "DJ",
+            "Śpiewanie",
+            "Rap",
+            "Koncerty",
+            "Winyle",
+            "Beatmaking",
+
+            "Gotowanie",
+            "Pieczenie",
+            "Grillowanie",
+            "Street food",
+            "Dietetyka",
+            "Zdrowe jedzenie",
+            "Kawa",
+            "Herbata",
+            "Kuchnie świata",
+            "Food blogging",
+
+            "Filmy",
+            "Seriale",
+            "Anime",
+            "Manga",
+            "YouTube",
+            "TikTok",
+            "Podcasty",
+            "Stand-up",
+            "Teatr",
+            "Książki",
+
+            "Języki obce",
+            "Psychologia",
+            "Filozofia",
+            "Rozwój osobisty",
+            "Medytacja",
+            "Mindfulness",
+            "Historia",
+            "Nauka",
+            "Artykuły",
+            "Kursy online",
+
+            "Planszówki",
+            "Szachy",
+            "RPG",
+            "Warhammer",
+            "Komiksy",
+            "Kolekcjonowanie",
+            "Lego",
+            "Escape roomy",
+            "Quizy",
+            "Puzzle",
+
+            "Motoryzacja",
+            "Motocykle",
+            "Samochody",
+            "Moda",
+            "Fitness lifestyle",
+            "Social media",
+            "Networking",
+            "Wolontariat",
+            "Zwierzęta",
+            "DIY",
+            "Ogrodnictwo"
+        ],
+        games: [
+            "FPS (First Person Shooter)",
+            "TPS (Third Person Shooter)",
+            "Battle Royale",
+            "MMO",
+            "MMORPG",
+            "RPG",
+            "Roguelike",
+
+            "Strategie czasu rzeczywistego (RTS)",
+            "Strategie turowe",
+            "Tower Defense",
+            "MOBA",
+
+            "Platformówki",
+            "Sandbox",
+            "Open World",
+            "Survival",
+
+            "Horror",
+            "Psychological Horror",
+            "Stealth",
+            "Action-Adventure",
+            "Hack & Slash",
+
+            "Symulatory",
+            "Looter Shooter",
+
+            "Wyścigowe",
+            "Sportowe",
+            "Gry muzyczne / rytmiczne",
+
+            "Indie",
+            "Retro",
+
+            "PvP",
+            "PvE",
+            "Historyczne",
+
+            "Anime styl",
+            "City Builder",
+        ],
+      books: ["Fantasy", "Sci-Fi", "Kryminał", "Horror", "Romans", "Historyczne", "Biografie", "Komiksy", "Naukowe"],
+      food: [
+            "McDonald's",
+            "KFC",
+            "Burger King",
+            "Subway",
+            "Pizza Hut",
+            "Domino's Pizza",
+
+            "Starbucks",
+            "Costa Coffee",
+
+            "Kuchnia azjatycka",
+            "Kuchnia włoska",
+            "Kuchnia amerykańska",
+            "Kuchnia meksykańska",
+            "Kuchnia bliskowschodnia",
+            "Kuchnia polska",
+
+            "Słone przekąski",
+            "Słodycze",
+            "Napoje energetyczne",
+            "Kawa i herbata",
+            "Domowe",
+            "Zdrowe jedzenie / Fit"
+        ],
+        music: [
+            "Pop",
+
+            "Rock",
+            "Hard Rock",
+            "Classic Rock",
+            "Alternative Rock",
+
+            "Metal",
+            "Heavy Metal",
+            "Thrash Metal",
+            "Death Metal",
+
+            "Rap",
+            "Hip Hop",
+            "Trap",
+            "Underground Rap",
+            "Lo-fi Hip Hop",
+
+            "R&B",
+            "Disco",
+
+            "Electronic",
+            "EDM",
+            "House",
+            "Deep House",
+            "Tech House",
+            "Progressive House",
+            "Electro House",
+            "Future House",
+            "Bass House",
+
+            "Techno",
+            "Dubstep",
+            "Drum and Bass",
+
+            "Hardstyle",
+            "Frenchcore",
+
+            "Chillout",
+            "Downtempo",
+            "Lo-fi",
+
+            "Jazz",
+            "Swing",
+            "Blues",
+
+            "Classical",
+
+            "Country",
+
+            "Reggae",
+
+            "Anime Music",
+            "Nightcore",
+            "Phonk",
+
+            "Soundtracks",
+            "Video Game OST",
+
+            "Polski Rap",
+            "Polski Trap",
+            "Polski Rock",
+            "Polski Pop",
+            "Disco Polo"
+        ]
+    };
+
+      const selectedData = {
+          hobby: [],
+          games: [],
+          books: [],
+          food: [],
+          drink: [],
+          music: [],
+          favoriteGames: []
+      };
+
+      let activeType = 'hobby';
+      let apiSearchTimeout = null;
+
+      const searchInput = document.getElementById('globalInterestSearch');
+      const activeTagsZone = document.getElementById('activeTagsZone');
+      const availableChipsZone = document.getElementById('availableChipsZone');
+
+      function updateBadges() {
+          Object.keys(selectedData).forEach(type => {
+              const badge = document.getElementById(`badge-${type}`);
+              if (badge) {
+                  badge.textContent = selectedData[type].length;
+              }
+          });
+      }
+
+      function buildChipElement(name) {
+          const chip = document.createElement('div');
+          chip.className = 'chip';
+          chip.textContent = name;
+          chip.onclick = () => {
+              if (!selectedData[activeType].includes(name)) {
+                  selectedData[activeType].push(name);
+              }
+              searchInput.value = '';
+              updateBadges();
+              renderWorkspace();
+          };
+          availableChipsZone.appendChild(chip);
+      }
+
+      function renderApiChips(query) {
+          clearTimeout(apiSearchTimeout);
+
+          const cleanQuery = query.trim();
+          if (cleanQuery.length < 2) {
+              availableChipsZone.innerHTML = '<div style="font-size:12px; color:#64748b; padding:8px;">Wpisz minimum 2 znaki, aby wyszukać gry...</div>';
+              return;
+          }
+
+          availableChipsZone.innerHTML = '<div style="font-size:12px; color:#a855f7; padding:8px;">Wyszukiwanie...</div>';
+
+          apiSearchTimeout = setTimeout(async () => {
+              try {
+                  const token = localStorage.getItem("token");
+                  const response = await authFetch(`/api/Matchmaking/Games/Search?query=${encodeURIComponent(cleanQuery)}`, {
+                      method: 'GET',
+                      headers: {
+                          'Authorization': token ? `Bearer ${token}` : ''
+                      }
+                  });
+
+                  if (!response.ok) {
+                      throw new Error("Błąd serwera podczas wyszukiwania gier.");
+                  }
+
+                  const games = await response.json();
+                  availableChipsZone.innerHTML = '';
+
+                  const gameNames = (games || [])
+                      .map(g => g.name || g.Name || "")
+                      .filter(name => name !== "" && !selectedData.favoriteGames.includes(name));
+
+                  if (gameNames.length === 0) {
+                      availableChipsZone.innerHTML = '<div style="font-size:12px; color:#f87171; padding:8px;">Nie znaleziono pasujących gier.</div>';
+                      return;
+                  }
+
+                  gameNames.forEach(name => buildChipElement(name));
+
+              } catch (error) {
+                  console.error("Błąd API:", error);
+                  availableChipsZone.innerHTML = '<div style="font-size:12px; color:#f87171; padding:8px;">Wystąpił błąd komunikacji z serwerem.</div>';
+              }
+          }, 300);
+      }
+
+      function renderWorkspace() {
+          activeTagsZone.innerHTML = '';
+          availableChipsZone.innerHTML = '';
+
+          const currentSelected = selectedData[activeType] || [];
+          const filterText = searchInput.value.toLowerCase().trim();
+
+          currentSelected.forEach(opt => {
+              const tag = document.createElement('div');
+              tag.className = 'tag';
+              tag.textContent = opt;
+
+              const removeBtn = document.createElement('span');
+              removeBtn.className = 'remove-btn';
+              removeBtn.textContent = ' ×';
+              removeBtn.onclick = (e) => {
+                  e.stopPropagation();
+                  selectedData[activeType] = selectedData[activeType].filter(o => o !== opt);
+                  updateBadges();
+                  renderWorkspace();
+              };
+
+              tag.appendChild(removeBtn);
+              activeTagsZone.appendChild(tag);
+          });
+
+          if (activeType === 'favoriteGames') {
+              renderApiChips(searchInput.value);
+          } else {
+              const allOptions = optionsMap[activeType] || [];
+
+              allOptions.forEach(opt => {
+                  const matchesFilter = opt.toLowerCase().includes(filterText);
+                  const isSelected = currentSelected.includes(opt);
+
+                  if (matchesFilter && !isSelected) {
+                      buildChipElement(opt);
+                  }
+              });
+          }
+      }
+
+      renderWorkspace();
+
+      document.querySelectorAll('.tab-btn').forEach(button => {
+          button.addEventListener('click', () => {
+              document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+              button.classList.add('active');
+
+              activeType = button.dataset.type;
+              searchInput.value = '';
+              renderWorkspace();
+          });
+      });
+
+      searchInput.addEventListener('input', renderWorkspace);
+
+    async function loadForm() {
+      try {
+        const response = await authFetch(API_URL);
+        if (!response.ok) throw new Error('Nie udało się pobrać danych profilu');
+
+        const data = await response.json();
+
+        document.getElementById('input-name').value = data.userName || '';
+        document.getElementById('input-tags').value = data.tags || '';
+        document.getElementById('input-desc').value = data.description || '';
+
+        document.getElementById('gender').value = data.gender || '';
+        document.getElementById('status').value = data.status || '';
+        document.getElementById('alcohol').value = data.alcohol || '';
+        document.getElementById('smoking').value = data.smoking || '';
+        document.getElementById('intent').value = data.intent || '';
+
+        selectedData.hobby = data.hobby || [];
+        selectedData.games = data.games || [];
+        selectedData.books = data.books || [];
+        selectedData.food = data.food || [];
+        selectedData.music = data.music || [];
+        selectedData.favoriteGames = data.favoriteGames || [];
+
+        updateBadges();
+        renderWorkspace();
+
+      } catch (error) {
+        console.error('Błąd wczytywania danych:', error);
+        renderWorkspace();
+      }
+    }
+
+    document.getElementById('edit-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const updatedData = {
+        userName: document.getElementById('input-name').value,
+        tags: document.getElementById('input-tags').value,
+        description: document.getElementById('input-desc').value,
+        gender: document.getElementById('gender').value,
+        status: document.getElementById('status').value,
+        alcohol: document.getElementById('alcohol').value,
+        smoking: document.getElementById('smoking').value,
+        intent: document.getElementById('intent').value,
+
+        hobby: selectedData.hobby,
+        games: selectedData.games,
+        books: selectedData.books,
+        food: selectedData.food,
+        music: selectedData.music,
+        favoriteGames: selectedData.favoriteGames
+      };
+
+      try {
+        const response = await authFetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedData)
+        });
+
+        if (response.ok) {
+          alert('Profil został pomyślnie zaktualizowany!');
+          window.location.href = 'profil.html';
+        } else {
+          alert('Błąd podczas zapisywania danych.');
+        }
+
+      } catch (error) {
+        console.error('Błąd:', error);
+        alert('Brak połączenia z serwerem.');
+      }
+    });
+
+    loadForm();
+  </script>
+</body>
+
+</html>

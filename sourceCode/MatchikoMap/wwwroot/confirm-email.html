@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/publicResources/favicon.ico">
+    <title>Potwierdzenie email</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            background: radial-gradient(circle at top, #0f172a, #020617);
+            color: #e5e7eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .profile-container {
+            max-width: 500px;
+            width: 90%;
+            background: #020617;
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(168,85,247,0.45);
+            overflow: hidden;
+            border: 1px solid #3d1b46;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .profile-header {
+            font-size: 28px;
+            font-weight: 700;
+            color: #a855f7;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .status-message {
+            font-size: 18px;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+
+        a.home-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #a855f7;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+            a.home-link:hover {
+                text-shadow: 0 0 10px #a855f7;
+            }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">Potwierdzenie email</div>
+        <div id="status" class="status-message">Trwa weryfikacja...</div>
+        <a href="index.html" class="home-link">Powrót do strony głównej</a>
+    </div>
+
+    <script>
+    async function confirmEmail() {
+      const statusDiv = document.getElementById('status');
+      const params = new URLSearchParams(window.location.search);
+      const userId = params.get('userId');
+      const token = params.get('token');
+
+      if (!userId || !token) {
+        statusDiv.innerText = "Brak wymaganych parametrów w URL";
+        statusDiv.classList.add('error');
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/confirm-email`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ userId, token })
+        });
+
+        if (res.ok) {
+          statusDiv.innerText = "Email potwierdzony!\nMożesz się teraz zalogować.";
+          statusDiv.classList.add('success');
+        } else {
+          const data = await res.json().catch(() => null);
+          const message = data?.message || "❌ Nie udało się potwierdzić emaila";
+          statusDiv.innerText = message;
+          statusDiv.classList.add('error');
+        }
+      } catch (e) {
+        statusDiv.innerText = "Wystąpił błąd";
+        statusDiv.classList.add('error');
+        console.error(e);
+      }
+    }
+
+    confirmEmail();
+    </script>
+</body>
+</html>
