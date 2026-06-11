@@ -57,9 +57,9 @@ TestResult.xml
 nunit-*.xml
 
 
-sourceCode/FindYourBuddy/obj/
-sourceCode/FindYourBuddy/bin/
+sourceCode/MatchikoMap/obj/
+sourceCode/MatchikoMap/bin/
+sourceCode/MatchikoMap/Migrations/AppDbContextModelSnapshot.cs
 sourceCode/.vs/
-sourceCode/MatchikoMap/Migrations/*
 *.user
 *.suo
