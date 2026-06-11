@@ -1,6 +1,6 @@
 ﻿namespace MatchikoMap.Models
 {
-    public class AzureBlobStorageSettings
+    public class MediaStorageSettings
     {
         public string ConnectionString { get; set; } = string.Empty;
         public string ProfileImagesContainer { get; set; } = string.Empty;

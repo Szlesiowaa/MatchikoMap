@@ -14,9 +14,9 @@ namespace MatchikoMap.Services.ProfilePictureService
 
         public ProfilePictureService(IConfiguration configuration)
         {
-            var connectionString = configuration["AzureBlobStorage:ConnectionString"];
+            var connectionString = configuration["MediaStorage:ConnectionString"];
 
-            var containerName = configuration["AzureBlobStorage:ProfileImagesContainer"];
+            var containerName = configuration["MediaStorage:ProfileImagesContainer"];
 
             var blobServiceClient = new BlobServiceClient(connectionString);
 

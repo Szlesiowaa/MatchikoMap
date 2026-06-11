@@ -14,8 +14,8 @@ namespace MatchikoMap.Services.MessageAttachmentService
 
         public MessageAttachmentService(IConfiguration config)
         {
-            var blobService = new BlobServiceClient(config["AzureBlobStorage:ConnectionString"]);
-            _container = blobService.GetBlobContainerClient(config["AzureBlobStorage:AttachmentsContainer"]);
+            var blobService = new BlobServiceClient(config["MediaStorage:ConnectionString"]);
+            _container = blobService.GetBlobContainerClient(config["MediaStorage:AttachmentsContainer"]);
         }
 
         public async Task<MessageAttachment> UploadAsync(IFormFile file, int messageId, CancellationToken ct = default)

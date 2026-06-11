@@ -256,10 +256,10 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
-builder.Services.Configure<AzureBlobStorageSettings>(builder.Configuration.GetSection("AzureBlobStorage"));
+builder.Services.Configure<MediaStorageSettings>(builder.Configuration.GetSection("MediaStorage"));
 builder.Services.AddAzureClients(clientBuilder =>
 {
-    clientBuilder.AddBlobServiceClient(builder.Configuration["AzureBlobStorage:ConnectionString"]);
+    clientBuilder.AddBlobServiceClient(builder.Configuration["MediaStorage:ConnectionString"]);
 });
 
 builder.Services.Configure<EmailSettings>(

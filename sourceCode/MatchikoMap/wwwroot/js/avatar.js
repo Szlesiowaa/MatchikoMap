@@ -8,7 +8,7 @@
         return './publicResources/defaultAvatars/domyslne.png';
     }
 
-    const baseUrl = "https://matchikomapstorage.blob.core.windows.net/profile-images";
+    const baseUrl = "https://matchikomapblobstorage.blob.core.windows.net/profile-images";
 
     const normalizedSize =
         size === "100" ? "100x100" :
