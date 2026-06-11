@@ -3,7 +3,6 @@ using System;
 using MatchikoMap.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,18 +11,32 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MatchikoMap.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260318191506_defaultProfilePictureUpdate")]
-    partial class defaultProfilePictureUpdate
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.12")
+                .HasAnnotation("ProductVersion", "8.0.23")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("MatchikoMap.Models.AppSetting", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("AppSettings");
+                });
 
             modelBuilder.Entity("MatchikoMap.Models.BlockedUser", b =>
                 {
@@ -54,6 +67,18 @@ namespace MatchikoMap.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("GameId")
+                        .HasColumnType("integer");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("LocationName")
+                        .HasColumnType("text");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -61,6 +86,12 @@ namespace MatchikoMap.Migrations
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("Latitude", "Longitude");
+
+                    b.HasIndex("Name", "isGroup");
 
                     b.ToTable("Conversations");
                 });
@@ -79,8 +110,8 @@ namespace MatchikoMap.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("LastReadAt")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<int>("LastReadMessageId")
+                        .HasColumnType("integer");
 
                     b.HasKey("ConversationId", "UserId");
 
@@ -97,6 +128,9 @@ namespace MatchikoMap.Migrations
                     b.Property<int>("FriendId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("ConversationId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -106,9 +140,120 @@ namespace MatchikoMap.Migrations
 
                     b.HasKey("UserId", "FriendId");
 
+                    b.HasIndex("ConversationId");
+
                     b.HasIndex("FriendId");
 
                     b.ToTable("FriendRelations");
+                });
+
+            modelBuilder.Entity("MatchikoMap.Models.Game", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Acronym")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("GridPath")
+                        .HasColumnType("text");
+
+                    b.Property<string>("IconPath")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NormalizedName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PosterPath")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_Games_Name_Trigram");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Name"), "gin");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Name"), new[] { "gin_trgm_ops" });
+
+                    b.HasIndex("NormalizedName")
+                        .HasDatabaseName("IX_Games_NormalizedName_Trigram");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("NormalizedName"), "gin");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("NormalizedName"), new[] { "gin_trgm_ops" });
+
+                    b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("MatchikoMap.Models.MatchmakingEntry", b =>
+                {
+                    b.Property<int>("MatchId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MatchId"));
+
+                    b.Property<string>("CreatorStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("CreatorUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)");
+
+                    b.Property<DateTime>("ExpiringAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("JoinerStatus")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("JoinerUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("MatchId");
+
+                    b.HasIndex("JoinerUserId");
+
+                    b.HasIndex("CreatorUserId", "GameId");
+
+                    b.HasIndex("GameId", "CreatorStatus", "ExpiringAt");
+
+                    b.ToTable("MatchmakingEntries");
+                });
+
+            modelBuilder.Entity("MatchikoMap.Models.MatchmakingReject", b =>
+                {
+                    b.Property<int>("MatchId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("MatchId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("MatchId", "UserId");
+
+                    b.ToTable("MatchmakingRejects");
                 });
 
             modelBuilder.Entity("MatchikoMap.Models.Message", b =>
@@ -157,19 +302,19 @@ namespace MatchikoMap.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<long>("FileSize")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("FileType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FileUrl")
+                    b.Property<string>("BlobName")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("MessageId")
                         .HasColumnType("integer");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("UploadedAt")
                         .HasColumnType("timestamp with time zone");
@@ -230,6 +375,9 @@ namespace MatchikoMap.Migrations
                     b.Property<string>("DefaultAvatarValue")
                         .HasColumnType("text");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -243,6 +391,11 @@ namespace MatchikoMap.Migrations
 
                     b.Property<double?>("Latitude")
                         .HasColumnType("double precision");
+
+                    b.Property<bool>("LocationPermission")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -267,7 +420,15 @@ namespace MatchikoMap.Migrations
                     b.Property<string>("ProfileImageUrl")
                         .HasColumnType("text");
 
+                    b.Property<double>("RadiusKm")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("double precision")
+                        .HasDefaultValue(30.0);
+
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Tags")
                         .HasColumnType("text");
 
                     b.Property<string>("UserName")
@@ -277,6 +438,9 @@ namespace MatchikoMap.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -284,7 +448,85 @@ namespace MatchikoMap.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("MatchikoMap.Models.UserFavouriteGames", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "GameId");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserFavouriteGames");
+                });
+
+            modelBuilder.Entity("MatchikoMap.Models.UserPreferences", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Alcohol")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Books")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("DayType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Drink")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("FavoriteGames")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Food")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Games")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Hobby")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Intent")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Music")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Smoking")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserPreferences");
                 });
 
             modelBuilder.Entity("MatchikoMap.Models.UserSettings", b =>
@@ -303,6 +545,9 @@ namespace MatchikoMap.Migrations
                     b.Property<string>("ProfileVisibility")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("SearchRadiusKm")
+                        .HasColumnType("integer");
 
                     b.HasKey("UserId");
 
@@ -460,6 +705,16 @@ namespace MatchikoMap.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MatchikoMap.Models.Conversation", b =>
+                {
+                    b.HasOne("MatchikoMap.Models.Game", "Game")
+                        .WithMany("Conversations")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Game");
+                });
+
             modelBuilder.Entity("MatchikoMap.Models.ConversationMember", b =>
                 {
                     b.HasOne("MatchikoMap.Models.Conversation", "Conversation")
@@ -481,6 +736,11 @@ namespace MatchikoMap.Migrations
 
             modelBuilder.Entity("MatchikoMap.Models.FriendRelation", b =>
                 {
+                    b.HasOne("MatchikoMap.Models.Conversation", "Conversation")
+                        .WithMany("FriendRelations")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("MatchikoMap.Models.User", "Friend")
                         .WithMany("FriendsReceived")
                         .HasForeignKey("FriendId")
@@ -493,7 +753,54 @@ namespace MatchikoMap.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Conversation");
+
                     b.Navigation("Friend");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MatchikoMap.Models.MatchmakingEntry", b =>
+                {
+                    b.HasOne("MatchikoMap.Models.User", "CreatorUser")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MatchikoMap.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MatchikoMap.Models.User", "JoinerUser")
+                        .WithMany()
+                        .HasForeignKey("JoinerUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CreatorUser");
+
+                    b.Navigation("Game");
+
+                    b.Navigation("JoinerUser");
+                });
+
+            modelBuilder.Entity("MatchikoMap.Models.MatchmakingReject", b =>
+                {
+                    b.HasOne("MatchikoMap.Models.MatchmakingEntry", "Entry")
+                        .WithMany()
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MatchikoMap.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Entry");
 
                     b.Navigation("User");
                 });
@@ -533,6 +840,36 @@ namespace MatchikoMap.Migrations
                     b.HasOne("MatchikoMap.Models.User", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MatchikoMap.Models.UserFavouriteGames", b =>
+                {
+                    b.HasOne("MatchikoMap.Models.Game", "Game")
+                        .WithMany("FavouritedBy")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MatchikoMap.Models.User", "User")
+                        .WithMany("FavouriteGames")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MatchikoMap.Models.UserPreferences", b =>
+                {
+                    b.HasOne("MatchikoMap.Models.User", "User")
+                        .WithOne("Preferences")
+                        .HasForeignKey("MatchikoMap.Models.UserPreferences", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -603,9 +940,18 @@ namespace MatchikoMap.Migrations
 
             modelBuilder.Entity("MatchikoMap.Models.Conversation", b =>
                 {
+                    b.Navigation("FriendRelations");
+
                     b.Navigation("Members");
 
                     b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("MatchikoMap.Models.Game", b =>
+                {
+                    b.Navigation("Conversations");
+
+                    b.Navigation("FavouritedBy");
                 });
 
             modelBuilder.Entity("MatchikoMap.Models.Message", b =>
@@ -619,11 +965,15 @@ namespace MatchikoMap.Migrations
 
                     b.Navigation("ConversationMembers");
 
+                    b.Navigation("FavouriteGames");
+
                     b.Navigation("FriendsInitiated");
 
                     b.Navigation("FriendsReceived");
 
                     b.Navigation("Messages");
+
+                    b.Navigation("Preferences");
 
                     b.Navigation("RefreshTokens");
 

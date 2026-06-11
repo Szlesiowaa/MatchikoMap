@@ -59,7 +59,6 @@ nunit-*.xml
 
 sourceCode/MatchikoMap/obj/
 sourceCode/MatchikoMap/bin/
-sourceCode/MatchikoMap/Migrations/AppDbContextModelSnapshot.cs
 sourceCode/.vs/
 *.user
 *.suo
