@@ -1,5 +1,5 @@
 # MatchikoMap
-[Link do strony](matchikomap.azurewebsites.net)
+[Link do strony](https://matchikomap.azurewebsites.net)
 ## Czym jest MatchikoMap?
 
 MatchikoMap to mały serwis społecznościowy dla graczy, który stara się rozwiązać problem braku prawdziwego kontaktu z drugim człowiekiem z użyciem mapy i lokalizacji.
